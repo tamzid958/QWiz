@@ -6,7 +6,7 @@ namespace QWiz.Entities;
 
 public class AppUser : IdentityUser
 {
-    [Required] [MaxLength(100)] public string FullName { get; set; } = null!;
+    [Required] [MaxLength(100)] public required string FullName { get; set; }
 
     [JsonIgnore] public override string ConcurrencyStamp => Guid.NewGuid().ToString();
 

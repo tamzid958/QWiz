@@ -25,6 +25,10 @@ public class AppDbContext : IdentityDbContext<AppUser>
     }
 
     public virtual DbSet<AppUser>? AppUsers { get; set; }
+    public virtual DbSet<Approver>? Approvers { get; set; }
+    public virtual DbSet<Category>? Categories { get; set; }
+    public virtual DbSet<Question>? Questions { get; set; }
+    public virtual DbSet<ApprovalLog>? ApprovalLogs { get; set; }
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
