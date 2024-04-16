@@ -1,11 +1,11 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using QWiz.Entities.Abstract;
 using QWiz.Entities.Enum;
+using QWiz.Helpers.EntityMapper.DTOs.Abstract;
 
-namespace QWiz.Entities;
+namespace QWiz.Helpers.EntityMapper.DTOs;
 
-public class Question : AbstractAuditable<long, AppUser, string>
+public class QuestionDto : AbstractPersistenceDto<long>
 {
     [MaxLength(400)] public required string Title { set; get; }
 
@@ -16,8 +16,4 @@ public class Question : AbstractAuditable<long, AppUser, string>
     public required QuestionType QuestionType { set; get; }
 
     public required int CategoryId { set; get; }
-
-    [ForeignKey("CategoryId")] [Required] public required Category Category { set; get; }
-
-    public ICollection<ApprovalLog> ApprovalLogs { get; set; } = new HashSet<ApprovalLog>();
 }

@@ -4,7 +4,7 @@ using QWiz.Entities.Abstract;
 
 namespace QWiz.Entities;
 
-public class Approver : AbstractAuditable<int, AppUser, string>
+public class Approver : AbstractPersistence<int>
 {
     public required int CategoryId { set; get; }
 

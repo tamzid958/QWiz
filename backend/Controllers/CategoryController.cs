@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Cors;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
 using QWiz.Entities;
 using QWiz.Helpers.EntityMapper.DTOs;
@@ -12,6 +13,7 @@ namespace QWiz.Controllers;
 [Consumes("application/json")]
 [Produces("application/json")]
 [EnableCors("AllowOrigin")]
+[Authorize]
 public class CategoryController(CategoryService categoryService) : ControllerBase
 {
     [HttpGet]
@@ -50,8 +52,8 @@ public class CategoryController(CategoryService categoryService) : ControllerBas
     }
 
     [HttpDelete("{id:int}")]
-    [ProducesResponseType(typeof(Category), StatusCodes.Status200OK)]
-    [ProducesResponseType(typeof(ExceptionMessage), StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
+    [ProducesResponseType(typeof(ExceptionMessage), StatusCodes.Status404NotFound)]
     public IActionResult Delete(int id)
     {
         categoryService.Delete(id);

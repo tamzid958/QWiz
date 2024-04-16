@@ -6,10 +6,13 @@ public static class ServiceExtension
 {
     public static void ServiceDependencyInjection(this IServiceCollection service)
     {
+        service.AddHttpContextAccessor();
+
         service.AddScoped<FileExtension>();
         service.AddScoped<AppUserService>();
         service.AddScoped<CategoryService>();
         service.AddScoped<ApproverService>();
         service.AddScoped<QuestionService>();
+        service.AddScoped<ApprovalLogService>();
     }
 }

@@ -1,12 +1,17 @@
 using System.Linq.Expressions;
 using Microsoft.EntityFrameworkCore;
 using QWiz.Databases;
+using QWiz.Helpers.Authentication;
 using QWiz.Helpers.Extensions;
 using QWiz.Helpers.Paginator;
 
 namespace QWiz.Repositories.Abstract;
 
-public abstract class BaseRepository<T>(AppDbContext context, IUriService uriService) : IBaseRepository<T>
+public abstract class BaseRepository<T>(
+    AppDbContext context,
+    IUriService uriService,
+    IAuthenticationService authenticationService
+) : IBaseRepository<T>
     where T : class
 {
     private IUriService UriService { get; } = uriService;
@@ -26,11 +31,18 @@ public abstract class BaseRepository<T>(AppDbContext context, IUriService uriSer
         }
     }
 
-
     T IBaseRepository<T>.Insert(T entity)
     {
         try
         {
+            if (typeof(T).GetProperty("CreatedById") != null)
+                typeof(T).GetProperty("CreatedById")?.SetValue(entity, authenticationService.GetCurrentUser());
+            if (typeof(T).GetProperty("CreatedAt") != null)
+                typeof(T).GetProperty("CreatedAt")?.SetValue(entity, DateTime.Now);
+            if (typeof(T).GetProperty("UpdatedAt") != null)
+                typeof(T).GetProperty("UpdatedAt")?.SetValue(entity, DateTime.Now);
+
+
             Context.Set<T>().Attach(entity);
             Context.Entry(entity).State = EntityState.Added;
             Context.SaveChanges();
@@ -47,6 +59,16 @@ public abstract class BaseRepository<T>(AppDbContext context, IUriService uriSer
     {
         try
         {
+            entities.ForEach(entity =>
+            {
+                if (typeof(T).GetProperty("CreatedById") != null)
+                    typeof(T).GetProperty("CreatedById")?.SetValue(entity, authenticationService.GetCurrentUser());
+                if (typeof(T).GetProperty("CreatedAt") != null)
+                    typeof(T).GetProperty("CreatedAt")?.SetValue(entity, DateTime.Now);
+                if (typeof(T).GetProperty("UpdatedAt") != null)
+                    typeof(T).GetProperty("UpdatedAt")?.SetValue(entity, DateTime.Now);
+            });
+
             Context.Set<T>().AddRange(entities);
             Context.SaveChanges();
             return entities;
@@ -61,6 +83,9 @@ public abstract class BaseRepository<T>(AppDbContext context, IUriService uriSer
     {
         try
         {
+            if (typeof(T).GetProperty("UpdatedAt") != null)
+                typeof(T).GetProperty("UpdatedAt")?.SetValue(entity, DateTime.Now);
+
             Context.Set<T>().Attach(entity);
             Context.Entry(entity).State = EntityState.Modified;
             Context.SaveChanges();
@@ -77,6 +102,12 @@ public abstract class BaseRepository<T>(AppDbContext context, IUriService uriSer
     {
         try
         {
+            entities.ForEach(entity =>
+            {
+                if (typeof(T).GetProperty("UpdatedAt") != null)
+                    typeof(T).GetProperty("UpdatedAt")?.SetValue(entity, DateTime.Now);
+            });
+
             Context.Set<T>().UpdateRange(entities);
             Context.SaveChanges();
             return entities;

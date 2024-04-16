@@ -14,7 +14,7 @@ namespace QWiz.Controllers;
 [Consumes("application/json")]
 [Produces("application/json")]
 [EnableCors("AllowOrigin")]
-public class AuthenticationController(AuthenticationService authenticationService, IMapperBase mapper)
+public class AuthenticationController(IAuthenticationService authenticationService, IMapperBase mapper)
     : ControllerBase
 {
     [HttpPost("Login")]
@@ -40,9 +40,9 @@ public class AuthenticationController(AuthenticationService authenticationServic
     [ProducesResponseType(typeof(AppUser), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(ExceptionMessage), StatusCodes.Status401Unauthorized)]
     [Authorize]
-    public async Task<IActionResult> GetCurrentUser()
+    public IActionResult GetCurrentUser()
     {
-        return Ok(await authenticationService.GetCurrentUser(HttpContext));
+        return Ok(authenticationService.GetCurrentUser());
     }
 
     [HttpGet("Roles/{userId}")]

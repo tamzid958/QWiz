@@ -13,7 +13,8 @@ namespace QWiz.Helpers.Authentication;
 public class AuthenticationService(
     IConfiguration configuration,
     UserManager<AppUser> userManager,
-    IRepositoryWrapper repositoryWrapper)
+    IRepositoryWrapper repositoryWrapper,
+    IHttpContextAccessor httpContextAccessor) : IAuthenticationService
 {
     public async Task<AuthClaim> Login(LoginDto loginDto)
     {
@@ -116,8 +117,10 @@ public class AuthenticationService(
         );
     }
 
-    public async Task<AppUser> GetCurrentUser(HttpContext httpContext)
+    public AppUser GetCurrentUser()
     {
-        return (await userManager.FindByNameAsync(httpContext.User.Identity?.Name!))!;
+        var user = userManager.GetUserAsync(httpContextAccessor.HttpContext!.User).Result;
+        if (user == null) throw new UnauthorizedAccessException("User not authenticated or identity not found");
+        return user;
     }
 }

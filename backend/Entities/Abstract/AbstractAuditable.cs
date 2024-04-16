@@ -3,13 +3,14 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace QWiz.Entities.Abstract;
 
-public class AbstractAuditable<TKey, TUser, TUserKey> : AbstractPersistence<TKey>
+public class AbstractAuditable<TKey, TUser, TUserKey> : IAbstractAuditable<TKey, TUser, TUserKey>
 {
-    public TUserKey? CreatedById { set; get; }
+    [Key]
+    [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+    public TKey Id { get; set; }
 
-    [ForeignKey("CreatedById")] public TUser? CreatedBy { set; get; }
-
+    public TUserKey? CreatedById { get; set; }
+    [ForeignKey("CreatedById")] public TUser? CreatedBy { get; set; }
     [Required] public DateTime CreatedAt { get; set; }
-
     [Required] public DateTime UpdatedAt { get; set; }
 }
