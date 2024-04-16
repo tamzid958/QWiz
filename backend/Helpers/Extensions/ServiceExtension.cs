@@ -8,5 +8,8 @@ public static class ServiceExtension
     {
         service.AddScoped<FileExtension>();
         service.AddScoped<AppUserService>();
+        service.AddScoped<CategoryService>();
+        service.AddScoped<ApproverService>();
+        service.AddScoped<QuestionService>();
     }
 }

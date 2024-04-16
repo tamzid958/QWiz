@@ -295,21 +295,12 @@ public abstract class BaseRepository<T>(AppDbContext context, IUriService uriSer
         }
     }
 
-    void IBaseRepository<T>.Delete(object id, bool hard)
+    void IBaseRepository<T>.Delete(IEnumerable<T> entities)
     {
         try
         {
-            if (hard)
-            {
-                var obj = Context.Set<T>().Find(id);
-                if (obj == null) throw new KeyNotFoundException("not found");
-                Context.Set<T>().Remove(obj);
-                Context.SaveChanges();
-            }
-            else
-            {
-                throw new NotImplementedException();
-            }
+            Context.Set<T>().RemoveRange(entities);
+            Context.SaveChanges();
         }
         catch (Exception e)
         {
@@ -317,20 +308,13 @@ public abstract class BaseRepository<T>(AppDbContext context, IUriService uriSer
         }
     }
 
-    void IBaseRepository<T>.Delete(IEnumerable<object> ids, bool hard)
+    void IBaseRepository<T>.Delete(Expression<Func<T, bool>> expression)
     {
         try
         {
-            if (hard)
-            {
-                var entities = ids.Select(id => Context.Set<T>().Find(id)!).ToList();
-                Context.Set<T>().RemoveRange(entities);
-                Context.SaveChanges();
-            }
-            else
-            {
-                throw new NotImplementedException();
-            }
+            var records = Context.Set<T>().Where(expression);
+            Context.Set<T>().RemoveRange(records);
+            Context.SaveChanges();
         }
         catch (Exception e)
         {
@@ -338,19 +322,28 @@ public abstract class BaseRepository<T>(AppDbContext context, IUriService uriSer
         }
     }
 
-    void IBaseRepository<T>.Delete(IEnumerable<T> entities, bool hard)
+    void IBaseRepository<T>.Delete(object id)
     {
         try
         {
-            if (hard)
-            {
-                Context.Set<T>().RemoveRange(entities);
-                Context.SaveChanges();
-            }
-            else
-            {
-                throw new NotImplementedException();
-            }
+            var obj = Context.Set<T>().Find(id);
+            if (obj == null) throw new KeyNotFoundException("not found");
+            Context.Set<T>().Remove(obj);
+            Context.SaveChanges();
+        }
+        catch (Exception e)
+        {
+            throw new Exception($"failed delete entity {typeof(T).Name}. Reason: {e}");
+        }
+    }
+
+    void IBaseRepository<T>.Delete(IEnumerable<object> ids)
+    {
+        try
+        {
+            var entities = ids.Select(id => Context.Set<T>().Find(id)!).ToList();
+            Context.Set<T>().RemoveRange(entities);
+            Context.SaveChanges();
         }
         catch (Exception e)
         {

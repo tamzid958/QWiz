@@ -13,9 +13,10 @@ public interface IBaseRepository<T>
 
     List<T> Update(List<T> entities);
 
-    void Delete(object id, bool hard = false);
-    void Delete(IEnumerable<object> ids, bool hard = false);
-    void Delete(IEnumerable<T> entities, bool hard = false);
+    void Delete(object id);
+    void Delete(IEnumerable<object> ids);
+    void Delete(IEnumerable<T> entities);
+    void Delete(Expression<Func<T, bool>> expression);
 
     T GetById(object id);
 
