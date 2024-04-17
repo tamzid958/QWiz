@@ -7,27 +7,9 @@ using QWiz.Repositories.Wrapper;
 
 namespace QWiz.Services;
 
-public class QuestionService(IRepositoryWrapper repositoryWrapper, CategoryService categoryService, IMapperBase mapper)
+public class QuestionService(IRepositoryWrapper repositoryWrapper, IMapper mapper)
+
 {
-    public void MoveToUncategorized(int categoryId)
-    {
-        var defaultCategory = categoryService.CreateUnCategorized();
-
-        var questions = repositoryWrapper.Question.GetAll(o => o.CategoryId == categoryId);
-
-        questions.ForEach(o => o.CategoryId = defaultCategory.Id);
-
-        repositoryWrapper.Question.Update(questions);
-    }
-
-    public static List<string> GetTypes()
-    {
-        return Enum.GetValues(typeof(QuestionType))
-            .Cast<QuestionType>()
-            .Select(v => v.ToString())
-            .ToList();
-    }
-
     public PagedResponse<List<Question>> Get(HttpRequest request, PaginationFilter paginationFilter)
     {
         return repositoryWrapper.Question.GetAll(paginationFilter, request);
@@ -52,5 +34,13 @@ public class QuestionService(IRepositoryWrapper repositoryWrapper, CategoryServi
     public void Delete(long id)
     {
         repositoryWrapper.Question.Delete(id);
+    }
+
+    public List<string> GetTypes()
+    {
+        return Enum.GetValues(typeof(QuestionType))
+            .Cast<QuestionType>()
+            .Select(v => v.ToString())
+            .ToList();
     }
 }

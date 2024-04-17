@@ -1,7 +1,6 @@
 using System.Linq.Expressions;
 using Microsoft.EntityFrameworkCore;
 using QWiz.Databases;
-using QWiz.Helpers.Authentication;
 using QWiz.Helpers.Extensions;
 using QWiz.Helpers.Paginator;
 
@@ -10,7 +9,7 @@ namespace QWiz.Repositories.Abstract;
 public abstract class BaseRepository<T>(
     AppDbContext context,
     IUriService uriService,
-    IAuthenticationService authenticationService
+    IHttpContextAccessor httpContextAccessor
 ) : IBaseRepository<T>
     where T : class
 {
@@ -35,8 +34,8 @@ public abstract class BaseRepository<T>(
     {
         try
         {
-            if (typeof(T).GetProperty("CreatedById") != null)
-                typeof(T).GetProperty("CreatedById")?.SetValue(entity, authenticationService.GetCurrentUser());
+            if (typeof(T).GetProperty("CreatedBy") != null)
+                typeof(T).GetProperty("CreatedBy")?.SetValue(entity, httpContextAccessor.HttpContext!.User);
             if (typeof(T).GetProperty("CreatedAt") != null)
                 typeof(T).GetProperty("CreatedAt")?.SetValue(entity, DateTime.Now);
             if (typeof(T).GetProperty("UpdatedAt") != null)
@@ -61,8 +60,8 @@ public abstract class BaseRepository<T>(
         {
             entities.ForEach(entity =>
             {
-                if (typeof(T).GetProperty("CreatedById") != null)
-                    typeof(T).GetProperty("CreatedById")?.SetValue(entity, authenticationService.GetCurrentUser());
+                if (typeof(T).GetProperty("CreatedBy") != null)
+                    typeof(T).GetProperty("CreatedBy")?.SetValue(entity, httpContextAccessor.HttpContext!.User);
                 if (typeof(T).GetProperty("CreatedAt") != null)
                     typeof(T).GetProperty("CreatedAt")?.SetValue(entity, DateTime.Now);
                 if (typeof(T).GetProperty("UpdatedAt") != null)

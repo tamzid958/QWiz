@@ -5,7 +5,7 @@ using QWiz.Repositories.Wrapper;
 
 namespace QWiz.Services;
 
-public class ApprovalLogService(IRepositoryWrapper repositoryWrapper, IMapperBase mapper)
+public class ApprovalLogService(IRepositoryWrapper repositoryWrapper, IMapper mapper)
 {
     public List<ApprovalLog> Get(HttpRequest request)
     {

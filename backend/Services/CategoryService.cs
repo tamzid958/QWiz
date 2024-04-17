@@ -5,9 +5,7 @@ using QWiz.Repositories.Wrapper;
 namespace QWiz.Services;
 
 public class CategoryService(
-    IRepositoryWrapper repositoryWrapper,
-    ApproverService approverService,
-    QuestionService questionService)
+    IRepositoryWrapper repositoryWrapper)
 {
     public List<Category> Get(HttpRequest request)
     {
@@ -26,7 +24,7 @@ public class CategoryService(
             Name = categoryWithApprover.Name
         });
 
-        approverService.CreateMultiple(category, categoryWithApprover.Approver.AppUserIds);
+        CreateMultiple(category, categoryWithApprover.Approver.AppUserIds);
 
         return category;
     }
@@ -36,7 +34,7 @@ public class CategoryService(
         var category = repositoryWrapper.Category.GetById(id);
         category.Name = categoryWithApprover.Name;
 
-        approverService.UpdateMultiple(category, categoryWithApprover.Approver.AppUserIds);
+        UpdateMultiple(category, categoryWithApprover.Approver.AppUserIds);
 
         return category;
     }
@@ -58,8 +56,49 @@ public class CategoryService(
 
     public void Delete(int id)
     {
-        questionService.MoveToUncategorized(id);
-        approverService.DeleteByCategory(id);
+        MoveToUncategorized(id);
+        DeleteByCategory(id);
         repositoryWrapper.Category.Delete(id);
+    }
+
+    private void MoveToUncategorized(int categoryId)
+    {
+        var defaultCategory = CreateUnCategorized();
+
+        var questions = repositoryWrapper.Question.GetAll(o => o.CategoryId == categoryId);
+
+        questions.ForEach(o => o.CategoryId = defaultCategory.Id);
+
+        repositoryWrapper.Question.Update(questions);
+    }
+
+
+    private void DeleteByCategory(int id)
+    {
+        repositoryWrapper.Approver.Delete(o => o.CategoryId == id);
+    }
+
+    private void CreateMultiple(Category category, List<string> appUserIds)
+    {
+        var approvers = appUserIds.ConvertAll(appUserId => new Approver
+        {
+            CategoryId = category.Id,
+            AppUserId = appUserId
+        });
+
+        repositoryWrapper.Approver.Insert(approvers);
+    }
+
+    private void UpdateMultiple(Category category, List<string> appUserIds)
+    {
+        repositoryWrapper.Approver.Delete(o => o.Category == category);
+
+        var approvers = appUserIds.ConvertAll(appUserId => new Approver
+        {
+            CategoryId = category.Id,
+            AppUserId = appUserId
+        });
+
+        repositoryWrapper.Approver.Insert(approvers);
     }
 }

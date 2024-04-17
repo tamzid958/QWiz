@@ -17,11 +17,11 @@ namespace QWiz.Controllers;
 [Authorize]
 public class QuestionController(QuestionService questionService) : ControllerBase
 {
-    [HttpGet]
+    [HttpGet("/Types")]
     [ProducesResponseType(typeof(List<string>), StatusCodes.Status200OK)]
     public IActionResult GetTypes()
     {
-        return Ok(QuestionService.GetTypes());
+        return Ok(questionService.GetTypes());
     }
 
     [HttpGet]

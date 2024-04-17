@@ -14,7 +14,7 @@ namespace QWiz.Controllers;
 [Consumes("application/json")]
 [Produces("application/json")]
 [EnableCors("AllowOrigin")]
-public class AuthenticationController(IAuthenticationService authenticationService, IMapperBase mapper)
+public class AuthenticationController(IAuthenticationService authenticationService, IMapper mapper)
     : ControllerBase
 {
     [HttpPost("Login")]
