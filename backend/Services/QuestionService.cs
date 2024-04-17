@@ -7,7 +7,7 @@ using QWiz.Repositories.Wrapper;
 
 namespace QWiz.Services;
 
-public class QuestionService(IRepositoryWrapper repositoryWrapper, CategoryService categoryService, IMapper mapper)
+public class QuestionService(IRepositoryWrapper repositoryWrapper, CategoryService categoryService, IMapperBase mapper)
 {
     public void MoveToUncategorized(int categoryId)
     {

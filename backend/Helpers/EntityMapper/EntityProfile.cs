@@ -34,5 +34,9 @@ public class EntityProfile : Profile
             .ForMember(o => o.Category, c => c.Ignore())
             .ForMember(o => o.ApprovalLogs, c => c.Ignore())
             .ForAllMembers(opts => opts.Condition((_, _, srcMember) => srcMember != null));
+
+        CreateMap<ApprovalLogDto, ApprovalLog>()
+            .ForMember(o => o.Question, c => c.Ignore())
+            .ForAllMembers(opts => opts.Condition((_, _, srcMember) => srcMember != null));
     }
 }

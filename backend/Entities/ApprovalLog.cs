@@ -4,7 +4,7 @@ using QWiz.Entities.Abstract;
 
 namespace QWiz.Entities;
 
-public class ApprovalLog : AbstractAuditable<int, AppUser, string>
+public class ApprovalLog : AbstractAuditable<long, AppUser, string>
 {
     public required long QuestionId { set; get; }
 
