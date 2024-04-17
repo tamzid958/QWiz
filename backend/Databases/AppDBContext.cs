@@ -1,8 +1,10 @@
 ﻿using System.Data;
 using System.Security.Authentication;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using QWiz.Entities;
+using QWiz.Entities.Enum;
 
 namespace QWiz.Databases;
 
@@ -38,6 +40,43 @@ public class AppDbContext : IdentityDbContext<AppUser>
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
+        SeedData(modelBuilder);
         base.OnModelCreating(modelBuilder);
+    }
+
+    private static void SeedData(ModelBuilder builder)
+    {
+        const string adminId = "02174cf0–9412–4cfe-afbf-59f706d72cf6";
+        const string roleId = "341743f0-asd2–42de-afbf-59kmkkmk72cf6";
+
+        builder.Entity<IdentityRole>().HasData(new IdentityRole
+        {
+            Name = Role.Reviewer.ToString(),
+            NormalizedName = Role.Reviewer.ToString().ToUpper(),
+            Id = roleId,
+            ConcurrencyStamp = roleId
+        });
+
+        var appUser = new AppUser
+        {
+            Id = adminId,
+            Email = "tamjidahmed958@gmail.com",
+            EmailConfirmed = true,
+            FullName = "Tamzid Ahmed",
+            UserName = "tamzid",
+            NormalizedUserName = "TAMZID"
+        };
+
+        var ph = new PasswordHasher<AppUser>();
+        appUser.PasswordHash = ph.HashPassword(appUser, "q2f184q0bS0M");
+
+        //seed user
+        builder.Entity<AppUser>().HasData(appUser);
+
+        builder.Entity<IdentityUserRole<string>>().HasData(new IdentityUserRole<string>
+        {
+            RoleId = roleId,
+            UserId = adminId
+        });
     }
 }

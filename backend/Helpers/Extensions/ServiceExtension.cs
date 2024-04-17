@@ -6,7 +6,7 @@ public static class ServiceExtension
 {
     public static void ServiceDependencyInjection(this IServiceCollection service)
     {
-        service.AddHttpContextAccessor();
+        service.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 
         service.AddScoped<FileExtension>();
         service.AddScoped<AppUserService>();

@@ -1,6 +1,8 @@
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.OpenApi.Models;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
+using QWiz.Helpers.Authentication;
 using QWiz.Helpers.Exception;
 using QWiz.Helpers.Extensions;
 using QWiz.Helpers.Security;
@@ -34,6 +36,13 @@ builder.Services.AddControllers().AddNewtonsoftJson(options =>
     options.SerializerSettings.Converters.Add(new StringEnumConverter());
     options.SerializerSettings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore;
 }).AddJsonOptions(opts => { opts.JsonSerializerOptions.PropertyNameCaseInsensitive = true; });
+
+builder.Services.AddApiVersioning(opts =>
+{
+    opts.DefaultApiVersion = new ApiVersion(1, 0);
+    opts.AssumeDefaultVersionWhenUnspecified = true;
+    opts.ReportApiVersions = true;
+});
 
 builder.Services.CoRsConfiguration(builder.Configuration);
 
@@ -99,6 +108,7 @@ app.UseRouting();
 
 app.CoRsApp(builder.Configuration);
 
+
 app.UseMiddleware<ErrorHandlerMiddleware>();
 
 app.UseHttpsRedirection();
@@ -108,6 +118,8 @@ app.UseStaticFiles();
 app.UseAuthentication();
 
 app.UseAuthorization();
+
+app.UseMiddleware<HttpContextMiddleware>();
 
 app.MapControllers();
 

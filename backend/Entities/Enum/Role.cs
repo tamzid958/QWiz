@@ -9,5 +9,6 @@ namespace QWiz.Entities.Enum;
 public enum Role
 {
     General,
-    Reviewer
+    Reviewer,
+    Admin
 }

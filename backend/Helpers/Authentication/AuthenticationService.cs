@@ -14,14 +14,15 @@ public class AuthenticationService(
     IConfiguration configuration,
     UserManager<AppUser> userManager,
     IRepositoryWrapper repositoryWrapper,
-    IHttpContextAccessor httpContextAccessor) : IAuthenticationService
+    IHttpContextAccessor httpContextAccessor)
 {
     public async Task<AuthClaim> Login(LoginDto loginDto)
     {
         try
         {
-            var user = await userManager.FindByEmailAsync(loginDto.EmailOrPhone) ??
-                       repositoryWrapper.AppUser.GetFirstBy(o => o.PhoneNumber == loginDto.EmailOrPhone);
+            var user = await userManager.FindByNameAsync(loginDto.Username) ??
+                       await userManager.FindByEmailAsync(loginDto.Username) ??
+                       repositoryWrapper.AppUser.GetFirstBy(o => o.PhoneNumber == loginDto.Username);
 
             if (!await userManager.CheckPasswordAsync(user, loginDto.Password))
                 throw new UnauthorizedAccessException("invalid email and password");
@@ -119,8 +120,9 @@ public class AuthenticationService(
 
     public AppUser GetCurrentUser()
     {
-        var user = userManager.GetUserAsync(httpContextAccessor.HttpContext!.User).Result;
-        if (user == null) throw new UnauthorizedAccessException("User not authenticated or identity not found");
-        return user;
+        var userIdentity = httpContextAccessor.HttpContext!.User.Identity;
+        if (userIdentity != null) return repositoryWrapper.AppUser.GetFirstBy(o => o.UserName == userIdentity.Name);
+
+        throw new UnauthorizedAccessException("User not authenticated or identity not found");
     }
 }

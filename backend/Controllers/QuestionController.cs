@@ -9,7 +9,7 @@ using QWiz.Services;
 
 namespace QWiz.Controllers;
 
-[Route("api/[controller]")]
+[Route("api/{v:apiVersion}/[controller]")]
 [ApiController]
 [Consumes("application/json")]
 [Produces("application/json")]
@@ -17,7 +17,7 @@ namespace QWiz.Controllers;
 [Authorize]
 public class QuestionController(QuestionService questionService) : ControllerBase
 {
-    [HttpGet("/Types")]
+    [HttpGet("Types")]
     [ProducesResponseType(typeof(List<string>), StatusCodes.Status200OK)]
     public IActionResult GetTypes()
     {

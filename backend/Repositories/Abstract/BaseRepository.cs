@@ -34,8 +34,9 @@ public abstract class BaseRepository<T>(
     {
         try
         {
-            if (typeof(T).GetProperty("CreatedBy") != null)
-                typeof(T).GetProperty("CreatedBy")?.SetValue(entity, httpContextAccessor.HttpContext!.User);
+            if (typeof(T).GetProperty("CreatedById") != null)
+                typeof(T).GetProperty("CreatedById")?.SetValue(entity,
+                    httpContextAccessor.HttpContext?.User.Claims.First(o => o.Type == "UserId").Value);
             if (typeof(T).GetProperty("CreatedAt") != null)
                 typeof(T).GetProperty("CreatedAt")?.SetValue(entity, DateTime.Now);
             if (typeof(T).GetProperty("UpdatedAt") != null)
@@ -58,10 +59,12 @@ public abstract class BaseRepository<T>(
     {
         try
         {
+            var user = httpContextAccessor.HttpContext?.User.Claims.First(o => o.Type == "UserId").Value;
+
             entities.ForEach(entity =>
             {
-                if (typeof(T).GetProperty("CreatedBy") != null)
-                    typeof(T).GetProperty("CreatedBy")?.SetValue(entity, httpContextAccessor.HttpContext!.User);
+                if (typeof(T).GetProperty("CreatedById") != null)
+                    typeof(T).GetProperty("CreatedById")?.SetValue(entity, user);
                 if (typeof(T).GetProperty("CreatedAt") != null)
                     typeof(T).GetProperty("CreatedAt")?.SetValue(entity, DateTime.Now);
                 if (typeof(T).GetProperty("UpdatedAt") != null)

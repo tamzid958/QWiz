@@ -10,7 +10,7 @@ using QWiz.Services;
 
 namespace QWiz.Controllers;
 
-[Route("api/[controller]")]
+[Route("api/{v:apiVersion}/[controller]")]
 [ApiController]
 [Consumes("application/json")]
 [Produces("application/json")]

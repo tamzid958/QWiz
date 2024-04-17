@@ -9,12 +9,12 @@ using QWiz.Helpers.Exception;
 
 namespace QWiz.Controllers;
 
-[Route("api/[controller]")]
+[Route("api/{v:apiVersion}/[controller]")]
 [ApiController]
 [Consumes("application/json")]
 [Produces("application/json")]
 [EnableCors("AllowOrigin")]
-public class AuthenticationController(IAuthenticationService authenticationService, IMapper mapper)
+public class AuthenticationController(AuthenticationService authenticationService, IMapper mapper)
     : ControllerBase
 {
     [HttpPost("Login")]
