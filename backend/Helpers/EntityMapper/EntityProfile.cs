@@ -10,7 +10,7 @@ public class EntityProfile : Profile
     {
         CreateMap<AppUserDto, AppUser>()
             .ForSourceMember(
-                o => o.Role,
+                o => o.Roles,
                 c => c.DoNotValidate()
             )
             .AfterMap((s, d) =>

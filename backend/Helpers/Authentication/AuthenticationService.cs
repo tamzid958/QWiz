@@ -48,12 +48,15 @@ public class AuthenticationService(
                 signingCredentials: new SigningCredentials(authSigningKey, SecurityAlgorithms.HmacSha256)
             );
 
+            var roles = (await userManager.GetRolesAsync(user)).ToList();
+
 
             return new AuthClaim
             {
                 Token = new JwtSecurityTokenHandler().WriteToken(token),
                 Expiration = token.ValidTo,
-                AppUser = user
+                AppUser = user,
+                Roles = roles
             };
         }
         catch (System.Exception e)
@@ -62,7 +65,7 @@ public class AuthenticationService(
         }
     }
 
-    public async Task<AppUser> Register(AppUser user, string password, Role role)
+    public async Task<AppUser> Register(AppUser user, string password, List<Role> roles)
     {
         try
         {
@@ -74,7 +77,7 @@ public class AuthenticationService(
             if (!userResult.Succeeded)
                 throw new InvalidDataException("user registration failed");
             var newUser = await userManager.FindByEmailAsync(user.Email!);
-            var roleResult = await userManager.AddToRoleAsync(newUser!, Enum.GetName(role)!);
+            var roleResult = await userManager.AddToRolesAsync(newUser!, roles.ConvertAll(input => input.ToString()));
             if (!roleResult.Succeeded)
                 throw new InvalidOperationException("user role assignment failed");
             return newUser!;

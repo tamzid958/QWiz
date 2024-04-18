@@ -53,8 +53,20 @@ namespace QWiz.Migrations
                         {
                             Id = "341743f0-asd2–42de-afbf-59kmkkmk72cf6",
                             ConcurrencyStamp = "341743f0-asd2–42de-afbf-59kmkkmk72cf6",
+                            Name = "Admin",
+                            NormalizedName = "ADMIN"
+                        },
+                        new
+                        {
+                            Id = "7428720f-870e-4856-92c6-cf4b136d51f7",
                             Name = "Reviewer",
                             NormalizedName = "REVIEWER"
+                        },
+                        new
+                        {
+                            Id = "2c115c7c-46e0-4809-b641-fd657eeda382",
+                            Name = "QuestionSetter",
+                            NormalizedName = "QUESTIONSETTER"
                         });
                 });
 
@@ -247,15 +259,15 @@ namespace QWiz.Migrations
                         {
                             Id = "02174cf0–9412–4cfe-afbf-59f706d72cf6",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "30c5fce4-97a6-4a62-8136-3ef7405c5efb",
+                            ConcurrencyStamp = "6b03704d-fffc-4f04-925e-226c3f03b48c",
                             Email = "tamjidahmed958@gmail.com",
                             EmailConfirmed = true,
                             FullName = "Tamzid Ahmed",
                             LockoutEnabled = false,
                             NormalizedUserName = "TAMZID",
-                            PasswordHash = "AQAAAAIAAYagAAAAEKYsX40xCIMJEpYMh9TdItpza648tYNx8PDMsSHJs1lTfGpu2CA6+EkB1qud7hyEOg==",
+                            PasswordHash = "AQAAAAIAAYagAAAAEPLf8GMV/bkUL/NESw2Ev1t+QtXgRPdFyTVDEsvY8urxBN4Ulyu/K27UUgEkQUn8qw==",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "d5d06021-c88c-40a6-86d9-d41f3ef9fb0b",
+                            SecurityStamp = "0728a9e8-08c0-4825-9451-c33ee6560c31",
                             TwoFactorEnabled = false,
                             UserName = "tamzid"
                         });
@@ -299,11 +311,11 @@ namespace QWiz.Migrations
 
             modelBuilder.Entity("QWiz.Entities.Approver", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<long>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
+                        .HasColumnType("bigint");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("Id"));
 
                     b.Property<string>("AppUserId")
                         .IsRequired()
@@ -312,11 +324,22 @@ namespace QWiz.Migrations
                     b.Property<int>("CategoryId")
                         .HasColumnType("int");
 
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("CreatedById")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<DateTime>("UpdatedAt")
+                        .HasColumnType("datetime2");
+
                     b.HasKey("Id");
 
                     b.HasIndex("AppUserId");
 
                     b.HasIndex("CategoryId");
+
+                    b.HasIndex("CreatedById");
 
                     b.ToTable("Approvers");
                 });
@@ -329,12 +352,23 @@ namespace QWiz.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("CreatedById")
+                        .HasColumnType("nvarchar(450)");
+
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)");
 
+                    b.Property<DateTime>("UpdatedAt")
+                        .HasColumnType("datetime2");
+
                     b.HasKey("Id");
+
+                    b.HasIndex("CreatedById");
 
                     b.HasIndex("Name")
                         .IsUnique();
@@ -466,9 +500,24 @@ namespace QWiz.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.HasOne("QWiz.Entities.AppUser", "CreatedBy")
+                        .WithMany()
+                        .HasForeignKey("CreatedById");
+
                     b.Navigation("AppUser");
 
                     b.Navigation("Category");
+
+                    b.Navigation("CreatedBy");
+                });
+
+            modelBuilder.Entity("QWiz.Entities.Category", b =>
+                {
+                    b.HasOne("QWiz.Entities.AppUser", "CreatedBy")
+                        .WithMany()
+                        .HasForeignKey("CreatedById");
+
+                    b.Navigation("CreatedBy");
                 });
 
             modelBuilder.Entity("QWiz.Entities.Question", b =>

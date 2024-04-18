@@ -13,14 +13,14 @@ public class AppUserService(IRepositoryWrapper repositoryWrapper)
     {
         return repositoryWrapper.AppUser.GetAll(paginationFilter, request,
             user =>
-                string.IsNullOrEmpty(appUserQueries.FullName) ||
-                (user.FullName.Contains(appUserQueries.FullName, StringComparison.CurrentCultureIgnoreCase) &&
-                 (string.IsNullOrEmpty(appUserQueries.UserName) ||
-                  user.UserName!.Contains(appUserQueries.UserName, StringComparison.CurrentCultureIgnoreCase)) &&
-                 (string.IsNullOrEmpty(appUserQueries.PhoneNumber) ||
-                  user.PhoneNumber!.Contains(appUserQueries.PhoneNumber!, StringComparison.CurrentCultureIgnoreCase)) &&
-                 (string.IsNullOrEmpty(appUserQueries.Email) ||
-                  user.Email!.Contains(appUserQueries.Email, StringComparison.CurrentCultureIgnoreCase))));
+                (string.IsNullOrEmpty(appUserQueries.FullName) ||
+                 user.FullName.ToLower().StartsWith(appUserQueries.FullName.ToLower())) &&
+                (string.IsNullOrEmpty(appUserQueries.UserName) ||
+                 user.UserName!.ToLower().StartsWith(appUserQueries.UserName.ToLower())) &&
+                (string.IsNullOrEmpty(appUserQueries.PhoneNumber) ||
+                 user.PhoneNumber!.StartsWith(appUserQueries.PhoneNumber)) &&
+                (string.IsNullOrEmpty(appUserQueries.Email) ||
+                 user.Email!.ToLower().StartsWith(appUserQueries.Email.ToLower())));
     }
 
     public AppUser GetById(string id)

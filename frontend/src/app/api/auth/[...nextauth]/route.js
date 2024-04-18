@@ -48,6 +48,7 @@ const handler = NextAuth({
               "phoneNumber",
               "userName",
             ]),
+            roles: user?.roles,
           },
         };
       }

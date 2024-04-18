@@ -9,7 +9,10 @@ public class CategoryService(
 {
     public List<Category> Get(HttpRequest request)
     {
-        return repositoryWrapper.Category.GetAll();
+        return repositoryWrapper.Category.GetAll(
+            category => category.Approvers.Select(x => x.AppUser),
+            category => category.CreatedBy!
+        );
     }
 
     public Category GetById(int id)
@@ -39,7 +42,7 @@ public class CategoryService(
         return category;
     }
 
-    public Category CreateUnCategorized()
+    private Category CreateUnCategorized()
     {
         const string defaultCategory = "Uncategorized";
 
@@ -83,7 +86,8 @@ public class CategoryService(
         var approvers = appUserIds.ConvertAll(appUserId => new Approver
         {
             CategoryId = category.Id,
-            AppUserId = appUserId
+            AppUserId = appUserId,
+            CreatedById = category.CreatedBy!.Id
         });
 
         repositoryWrapper.Approver.Insert(approvers);

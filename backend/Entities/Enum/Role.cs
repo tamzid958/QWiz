@@ -8,7 +8,7 @@ namespace QWiz.Entities.Enum;
 [JsonConverter(typeof(StringEnumConverter))]
 public enum Role
 {
-    General,
+    QuestionSetter,
     Reviewer,
     Admin
 }

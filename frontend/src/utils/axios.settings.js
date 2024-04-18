@@ -3,7 +3,7 @@ import { getSession } from "next-auth/react";
 
 const axios = _axios.create({
   timeout: 5000,
-  baseURL: process.env.BASE_URL,
+  baseURL: process.env.NEXT_PUBLIC_BASE_URL,
 });
 
 axios.interceptors.request.use(
@@ -58,10 +58,11 @@ const getErrorMessage = (e) => {
 
 const bearerToken = async ({ req }) => {
   const session = await getSession({ req });
-  return session?.user.token
+
+  return session?.accessToken
     ? {
         ...Headers,
-        Authorization: `Bearer ${session?.user.token}`,
+        Authorization: `Bearer ${session?.accessToken}`,
       }
     : { ...Headers };
 };
@@ -72,7 +73,7 @@ const bearerToken = async ({ req }) => {
  * @param baseURL
  * @param url
  * @param params
- * @returns {Promise<{data: any, revision: string}|{error: {code: number, title: string, message: string}}>}
+
  */
 
 // req = {
@@ -127,7 +128,6 @@ export const getServerApi = async ({ req, url, params = {} }) => {
  * @param isTimeoutExtended
  * @param ignoreStatusCheck
  * @param unmodifiedErrorResponse
- * @returns {Promise<{data: any, revision: string}|{error: ({code: number, title: string, message: string}|{code: *, title: (string), message: (string|string)})}|{error: {code: number, title: string, message: string}}>}
  */
 export const requestApi = async ({
   req,
@@ -203,7 +203,6 @@ export const requestApi = async ({
  * @param params
  * @param data
  * @param headers
- * @returns {Promise<{data: any, revision: string}>}
  */
 export const callApi = async ({
   req,
@@ -257,5 +256,5 @@ export const callApi = async ({
     );
   }
 
-  return { data: res.data, revision: res.headers["etag"] };
+  return { data: res.data };
 };

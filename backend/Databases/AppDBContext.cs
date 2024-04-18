@@ -51,10 +51,18 @@ public class AppDbContext : IdentityDbContext<AppUser>
 
         builder.Entity<IdentityRole>().HasData(new IdentityRole
         {
-            Name = Role.Reviewer.ToString(),
-            NormalizedName = Role.Reviewer.ToString().ToUpper(),
+            Name = Role.Admin.ToString(),
+            NormalizedName = Role.Admin.ToString().ToUpper(),
             Id = roleId,
             ConcurrencyStamp = roleId
+        }, new IdentityRole
+        {
+            Name = Role.Reviewer.ToString(),
+            NormalizedName = Role.Reviewer.ToString().ToUpper()
+        }, new IdentityRole
+        {
+            Name = Role.QuestionSetter.ToString(),
+            NormalizedName = Role.QuestionSetter.ToString().ToUpper()
         });
 
         var appUser = new AppUser

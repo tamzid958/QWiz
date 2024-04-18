@@ -4,9 +4,9 @@ import { getServerApi } from "@/utils/axios.settings";
 import { SessionProvider } from "next-auth/react";
 import { SWRConfig } from "swr";
 
-const RootLayoutWrapper = ({ session, children }) => {
+const RootLayoutWrapper = ({ session: serverSession, children }) => {
   return (
-    <SessionProvider session={session}>
+    <SessionProvider session={serverSession}>
       <SWRConfig
         value={{
           provider: () => new Map(),

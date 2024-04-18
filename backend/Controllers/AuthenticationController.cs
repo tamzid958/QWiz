@@ -32,7 +32,7 @@ public class AuthenticationController(AuthenticationService authenticationServic
     {
         var appUser = mapper.Map<AppUser>(appUserDto);
         return Created(Request.Path.Value!,
-            await authenticationService.Register(appUser, appUserDto.Password, appUserDto.Role));
+            await authenticationService.Register(appUser, appUserDto.Password, appUserDto.Roles));
     }
 
 

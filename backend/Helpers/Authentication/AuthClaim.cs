@@ -8,4 +8,6 @@ public class AuthClaim
     public DateTime Expiration { set; get; }
 
     public AppUser AppUser { set; get; } = null!;
+
+    public List<string> Roles { set; get; } = null!;
 }

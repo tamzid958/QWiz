@@ -5,7 +5,7 @@ using QWiz.Entities.Abstract;
 namespace QWiz.Entities;
 
 [Index(nameof(Name), IsUnique = true)]
-public class Category : AbstractPersistence<int>
+public class Category : AbstractAuditable<int, AppUser, string>
 {
     [Required] [MaxLength(100)] public required string Name { get; set; }
 
