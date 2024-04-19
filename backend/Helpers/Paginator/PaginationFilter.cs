@@ -15,7 +15,7 @@ public class PaginationFilter
     public PaginationFilter(int pageNumber, int pageSize, string sort, Order order = Order.Desc)
     {
         PageNumber = pageNumber < 1 ? 1 : pageNumber;
-        PageSize = pageSize < 1 ? 1 : pageSize;
+        PageSize = pageSize < 1 ? 1 : pageSize > 100 ? 100 : pageSize;
         Order = order;
         Sort = sort;
     }

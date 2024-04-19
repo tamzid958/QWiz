@@ -17,7 +17,9 @@ public class CategoryService(
 
     public Category GetById(int id)
     {
-        return repositoryWrapper.Category.GetById(id);
+        return repositoryWrapper.Category.GetFirstBy(o => o.Id == id,
+            category => category.Approvers.Select(x => x.AppUser)
+        );
     }
 
     public Category Create(CategoryWithApprover categoryWithApprover)
@@ -27,7 +29,7 @@ public class CategoryService(
             Name = categoryWithApprover.Name
         });
 
-        CreateMultiple(category, categoryWithApprover.Approver.AppUserIds);
+        CreateMultiple(category, categoryWithApprover.Approver.AppUserNames);
 
         return category;
     }
@@ -37,7 +39,7 @@ public class CategoryService(
         var category = repositoryWrapper.Category.GetById(id);
         category.Name = categoryWithApprover.Name;
 
-        UpdateMultiple(category, categoryWithApprover.Approver.AppUserIds);
+        UpdateMultiple(category, categoryWithApprover.Approver.AppUserNames);
 
         return category;
     }
@@ -81,26 +83,26 @@ public class CategoryService(
         repositoryWrapper.Approver.Delete(o => o.CategoryId == id);
     }
 
-    private void CreateMultiple(Category category, List<string> appUserIds)
+    private void CreateMultiple(Category category, List<string> appUserNames)
     {
-        var approvers = appUserIds.ConvertAll(appUserId => new Approver
+        var approvers = appUserNames.ConvertAll(appUserName => new Approver
         {
             CategoryId = category.Id,
-            AppUserId = appUserId,
+            AppUserId = repositoryWrapper.AppUser.GetFirstBy(o => o.UserName == appUserName).Id,
             CreatedById = category.CreatedBy!.Id
         });
 
         repositoryWrapper.Approver.Insert(approvers);
     }
 
-    private void UpdateMultiple(Category category, List<string> appUserIds)
+    private void UpdateMultiple(Category category, List<string> appUserNames)
     {
         repositoryWrapper.Approver.Delete(o => o.Category == category);
 
-        var approvers = appUserIds.ConvertAll(appUserId => new Approver
+        var approvers = appUserNames.ConvertAll(appUserName => new Approver
         {
             CategoryId = category.Id,
-            AppUserId = appUserId
+            AppUserId = repositoryWrapper.AppUser.GetFirstBy(o => o.UserName == appUserName).Id
         });
 
         repositoryWrapper.Approver.Insert(approvers);

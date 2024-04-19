@@ -20,6 +20,7 @@ import { usePathname, useRouter } from "next/navigation";
 import {
   Avatar,
   Breadcrumbs,
+  Fab,
   Link,
   Paper,
   Tooltip,
@@ -33,6 +34,8 @@ import {
 } from "@/utils/common";
 import _ from "lodash";
 import { ToastContainer } from "react-toastify";
+import Logo from "../../public/logo.png";
+import Image from "next/image";
 
 const drawerWidth = 240;
 
@@ -102,7 +105,11 @@ const Layout = ({ children }) => {
 
   return (
     <Box sx={{ display: "flex" }}>
-      <AppBar position="fixed" open={openDrawer}>
+      <AppBar
+        position="fixed"
+        open={openDrawer}
+        className="bg-gradient-to-r from-black to-gray-900"
+      >
         <Toolbar className="flex justify-between">
           <IconButton
             color="inherit"
@@ -155,14 +162,17 @@ const Layout = ({ children }) => {
         open={openDrawer}
       >
         <DrawerHeader>
-          <IconButton onClick={handleDrawerClose}>
-            <ChevronLeftIcon />
-          </IconButton>
+          <div className="flex justify-between gap-x-36">
+            <Image src={Logo} alt="logo" className="w-10 h-10" />
+            <IconButton onClick={handleDrawerClose}>
+              <ChevronLeftIcon />
+            </IconButton>
+          </div>
         </DrawerHeader>
         <Divider />
         <List>
           {navigationLinks
-            .filter((o) => _.difference(roles, o.access).length === 0)
+            .filter((o) => _.intersection(o.access, roles).length > 0)
             .map((o) => (
               <ListItem
                 key={o.title}
@@ -182,7 +192,10 @@ const Layout = ({ children }) => {
             ))}
         </List>
       </Drawer>
-      <Main open={openDrawer}>
+      <Main
+        open={openDrawer}
+        className="h-screen bg-gradient-to-br from-gray-100 to-gray-300"
+      >
         <DrawerHeader />
         <ToastContainer />
         <div
@@ -208,6 +221,14 @@ const Layout = ({ children }) => {
             </div>
           </Paper>
         </div>
+        <Tooltip title="Developed by Tamzid">
+          <Fab
+            aria-label="add"
+            className={"absolute bottom-5 right-5 bg-black"}
+          >
+            <Image src={Logo} alt="logo" className="w-10 h-10" />
+          </Fab>
+        </Tooltip>
       </Main>
     </Box>
   );

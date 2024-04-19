@@ -10,6 +10,6 @@ public class CategoryWithApprover
 
     public class ApproverDto
     {
-        [MinLength(1)] public required List<string> AppUserIds { set; get; }
+        [MinLength(1)] public required List<string> AppUserNames { set; get; }
     }
 }

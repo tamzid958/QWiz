@@ -88,8 +88,13 @@ public abstract class BaseRepository<T>(
             if (typeof(T).GetProperty("UpdatedAt") != null)
                 typeof(T).GetProperty("UpdatedAt")?.SetValue(entity, DateTime.Now);
 
+
             Context.Set<T>().Attach(entity);
             Context.Entry(entity).State = EntityState.Modified;
+            if (typeof(T).GetProperty("CreatedById") != null)
+                Context.Entry(entity).Property("CreatedById").IsModified = false;
+            if (typeof(T).GetProperty("CreatedAt") != null)
+                Context.Entry(entity).Property("CreatedAt").IsModified = false;
             Context.SaveChanges();
 
             return entity;
@@ -108,6 +113,10 @@ public abstract class BaseRepository<T>(
             {
                 if (typeof(T).GetProperty("UpdatedAt") != null)
                     typeof(T).GetProperty("UpdatedAt")?.SetValue(entity, DateTime.Now);
+                if (typeof(T).GetProperty("CreatedById") != null)
+                    Context.Entry(entity).Property("CreatedById").IsModified = false;
+                if (typeof(T).GetProperty("CreatedAt") != null)
+                    Context.Entry(entity).Property("CreatedAt").IsModified = false;
             });
 
             Context.Set<T>().UpdateRange(entities);

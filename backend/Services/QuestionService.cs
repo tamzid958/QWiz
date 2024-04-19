@@ -12,7 +12,10 @@ public class QuestionService(IRepositoryWrapper repositoryWrapper, IMapper mappe
 {
     public PagedResponse<List<Question>> Get(HttpRequest request, PaginationFilter paginationFilter)
     {
-        return repositoryWrapper.Question.GetAll(paginationFilter, request);
+        return repositoryWrapper.Question.GetAll(paginationFilter, request, null,
+            question => question.Category,
+            question => question.CreatedBy!
+        );
     }
 
     public Question GetById(long id)

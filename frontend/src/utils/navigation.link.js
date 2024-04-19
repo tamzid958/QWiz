@@ -16,13 +16,13 @@ const navigationLinks = [
   {
     title: "Question",
     icon: <QuestionAnswer />,
-    url: "/question",
+    url: "/questions",
     access: ["QuestionSetter"],
   },
   {
     title: "Review",
     icon: <ReviewsSharp />,
-    url: "/review",
+    url: "/reviews",
     access: ["Reviewer"],
   },
   {

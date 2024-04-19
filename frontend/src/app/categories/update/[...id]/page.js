@@ -6,14 +6,17 @@ import {
 } from "react-hook-form-mui";
 import { Typography } from "@mui/material";
 import { LoadingButton } from "@mui/lab";
-import { useState } from "react";
-import { useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
+import { useParams, useRouter } from "next/navigation";
 import useSWR from "swr";
 import _ from "lodash";
 import { requestApi } from "@/utils/axios.settings";
 import { toast } from "react-toastify";
+import Loader from "@/components/Loader";
 
 const Page = () => {
+  const queryParams = useParams();
+
   const [params, setParams] = useState({});
   const [loading, setLoading] = useState(false);
   const router = useRouter();
@@ -21,23 +24,40 @@ const Page = () => {
     url: "/AppUser",
     params: { ...params, size: 100 },
   });
+  const { data: prevData, mutate } = useSWR({
+    url: `/Category/${queryParams.id}`,
+  });
+
   const [selected, setSelected] = useState([]);
-  return (
+
+  useEffect(() => {
+    setSelected(prevData?.approvers.map((o) => o.appUser?.userName) ?? []);
+  }, [prevData?.approvers]);
+
+  return !prevData ? (
+    <div className="w-full">
+      <Loader />
+    </div>
+  ) : (
     <>
       <Typography
         variant="h5"
         component="h5"
         className="font-bold text-blue-800"
       >
-        Create new category
+        Update category
       </Typography>
       <div className="w-full">
         <FormContainer
+          defaultValues={{
+            name: prevData?.name,
+            approvers: prevData?.approvers.map((o) => o.appUser?.userName),
+          }}
           onSuccess={async (data) => {
             setLoading(true);
             await requestApi({
-              method: "POST",
-              url: "/Category",
+              method: "PUT",
+              url: `/Category/${queryParams.id}`,
               data: {
                 name: data.name,
                 approver: {
@@ -49,6 +69,7 @@ const Page = () => {
               error
                 ? toast.error("Category Creation Failed")
                 : toast.success("Category Created Successfully");
+              !error && mutate();
               !error && router.back();
             });
           }}

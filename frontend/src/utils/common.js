@@ -1,3 +1,6 @@
+import _ from "lodash";
+import dateFormat from "dateformat";
+
 const getLettersFromString = (str) => {
   const parts = str.split(" "); // Split the full name into parts by space
   let initials = "";
@@ -67,7 +70,44 @@ const breadCrumbGenerator = (pathName) => {
     breadcrumbs.push(breadcrumb);
   });
 
-  return [{ name: "Dashboard", path: "/" }].concat(breadcrumbs);
+  return forUpdatePaths([{ name: "Dashboard", path: "/" }].concat(breadcrumbs));
 };
 
-export { getLettersFromString, textToDarkLightColor, breadCrumbGenerator };
+function forUpdatePaths(items) {
+  const updatedBreadCrumb = [];
+  let removeObjectPath = null;
+  _.forEach(items, (item) => {
+    if (_.includes(item.name, "Update")) {
+      removeObjectPath = getNextObject(items, item).path;
+    }
+    if (item.path !== removeObjectPath) {
+      updatedBreadCrumb.push({
+        name: item.name,
+        path: _.includes(item.name, "Update")
+          ? getNextObject(items, item)?.path
+          : item.path,
+      });
+    }
+  });
+
+  return updatedBreadCrumb;
+}
+
+function getNextObject(objects, currentObject) {
+  const index = _.findIndex(objects, currentObject);
+  if (index !== -1 && index < objects.length - 1) {
+    return objects[index + 1];
+  }
+  return null;
+}
+
+const formatDate = (date) => {
+  return dateFormat(new Date(date), "dddd, mmmm dS, yyyy, h:MM TT");
+};
+
+export {
+  getLettersFromString,
+  textToDarkLightColor,
+  breadCrumbGenerator,
+  formatDate,
+};
