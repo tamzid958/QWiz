@@ -96,6 +96,7 @@ const Page = () => {
                     "numberedList",
                     "blockQuote",
                     "link",
+                    "codeBlock",
                   ],
                 }}
                 data={description}

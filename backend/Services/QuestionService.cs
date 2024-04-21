@@ -2,6 +2,7 @@
 using QWiz.Entities;
 using QWiz.Entities.Enum;
 using QWiz.Helpers.EntityMapper.DTOs;
+using QWiz.Helpers.HttpQueries;
 using QWiz.Helpers.Paginator;
 using QWiz.Repositories.Wrapper;
 
@@ -10,9 +11,11 @@ namespace QWiz.Services;
 public class QuestionService(IRepositoryWrapper repositoryWrapper, IMapper mapper)
 
 {
-    public PagedResponse<List<Question>> Get(HttpRequest request, PaginationFilter paginationFilter)
+    public PagedResponse<List<Question>> Get(HttpRequest request, PaginationFilter paginationFilter,
+        QuestionQueries questionQueries)
     {
-        return repositoryWrapper.Question.GetAll(paginationFilter, request, null,
+        return repositoryWrapper.Question.GetAll(paginationFilter, request,
+            question => questionQueries.CategoryId == null || question.CategoryId == questionQueries.CategoryId,
             question => question.Category,
             question => question.CreatedBy!
         );
@@ -20,7 +23,11 @@ public class QuestionService(IRepositoryWrapper repositoryWrapper, IMapper mappe
 
     public Question GetById(long id)
     {
-        return repositoryWrapper.Question.GetById(id);
+        return repositoryWrapper.Question.GetFirstBy(
+            question => question.Id == id,
+            question => question.Category,
+            question => question.CreatedBy!
+        );
     }
 
     public Question Create(QuestionDto question)

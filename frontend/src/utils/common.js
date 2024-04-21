@@ -77,15 +77,16 @@ function forUpdatePaths(items) {
   const updatedBreadCrumb = [];
   let removeObjectPath = null;
   _.forEach(items, (item) => {
-    if (_.includes(item.name, "Update")) {
+    if (_.includes(item.name, "Update") || _.includes(item.name, "View")) {
       removeObjectPath = getNextObject(items, item).path;
     }
     if (item.path !== removeObjectPath) {
       updatedBreadCrumb.push({
         name: item.name,
-        path: _.includes(item.name, "Update")
-          ? getNextObject(items, item)?.path
-          : item.path,
+        path:
+          _.includes(item.name, "Update") || _.includes(item.name, "View")
+            ? getNextObject(items, item)?.path
+            : item.path,
       });
     }
   });

@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using QWiz.Entities;
 using QWiz.Helpers.EntityMapper.DTOs;
 using QWiz.Helpers.Exception;
+using QWiz.Helpers.HttpQueries;
 using QWiz.Helpers.Paginator;
 using QWiz.Services;
 
@@ -26,9 +27,9 @@ public class QuestionController(QuestionService questionService) : ControllerBas
 
     [HttpGet]
     [ProducesResponseType(typeof(PagedResponse<List<Question>>), StatusCodes.Status200OK)]
-    public IActionResult Get([FromQuery] PaginationFilter paginationFilter)
+    public IActionResult Get([FromQuery] PaginationFilter paginationFilter, [FromQuery] QuestionQueries questionQueries)
     {
-        return Ok(questionService.Get(Request, paginationFilter));
+        return Ok(questionService.Get(Request, paginationFilter, questionQueries));
     }
 
     [HttpGet("{id:long}")]

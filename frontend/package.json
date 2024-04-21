@@ -19,6 +19,7 @@
     "@mui/material": "^5.15.15",
     "axios": "^1.6.8",
     "dateformat": "^5.0.3",
+    "html-to-react": "^1.7.0",
     "lodash": "^4.17.21",
     "next": "^14.2.1",
     "next-auth": "^4.24.7",
