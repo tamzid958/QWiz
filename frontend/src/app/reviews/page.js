@@ -22,14 +22,21 @@ import { useRouter } from "next/navigation";
 const QuestionsByCategory = ({ categoryId }) => {
   const [params, setParams] = useState({
     page: 1,
-    categoryId,
   });
-  const { data } = useSWR({ url: "/Question", params });
+  const { data } = useSWR({
+    url: "/Question",
+    params: {
+      ...params,
+      categoryId,
+    },
+  });
   const router = useRouter();
 
   useEffect(() => {
-    setParams({ page: 1, categoryId });
-  }, [categoryId, params]);
+    if (categoryId) {
+      setParams({ page: 1 });
+    }
+  }, [categoryId]);
 
   return (
     <div className="w-full">

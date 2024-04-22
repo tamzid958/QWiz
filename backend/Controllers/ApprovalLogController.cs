@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using QWiz.Entities;
 using QWiz.Helpers.EntityMapper.DTOs;
 using QWiz.Helpers.Exception;
+using QWiz.Helpers.HttpQueries;
 using QWiz.Services;
 
 namespace QWiz.Controllers;
@@ -18,9 +19,9 @@ public class ApprovalLogController(ApprovalLogService approvalLogService) : Cont
 {
     [HttpGet]
     [ProducesResponseType(typeof(List<ApprovalLog>), StatusCodes.Status200OK)]
-    public IActionResult Get()
+    public IActionResult Get([FromQuery] ApprovalLogQueries approvalLogQueries)
     {
-        return Ok(approvalLogService.Get(Request));
+        return Ok(approvalLogService.Get(Request, approvalLogQueries));
     }
 
     [HttpPost]

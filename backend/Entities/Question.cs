@@ -15,6 +15,8 @@ public class Question : AbstractAuditable<long, AppUser, string>
     [Column(TypeName = "varchar(30)")]
     public required QuestionType QuestionType { set; get; }
 
+    public bool? IsAddedToQuestionBank { set; get; }
+
     public required int CategoryId { set; get; }
 
     [ForeignKey("CategoryId")] [Required] public required Category Category { set; get; }
