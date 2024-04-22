@@ -3,6 +3,6 @@ using QWiz.Repositories.Abstract;
 
 namespace QWiz.Repositories;
 
-public interface IApprovalLogRepository : IBaseRepository<ApprovalLog>
+public interface IReviewerRepository : IBaseRepository<Reviewer>
 {
 }

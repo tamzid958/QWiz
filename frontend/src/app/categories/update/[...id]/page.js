@@ -31,8 +31,8 @@ const Page = () => {
   const [selected, setSelected] = useState([]);
 
   useEffect(() => {
-    setSelected(prevData?.approvers.map((o) => o.appUser?.userName) ?? []);
-  }, [prevData?.approvers]);
+    setSelected(prevData?.reviewers.map((o) => o.appUser?.userName) ?? []);
+  }, [prevData?.reviewers]);
 
   return !prevData ? (
     <div className="w-full">
@@ -51,7 +51,7 @@ const Page = () => {
         <FormContainer
           defaultValues={{
             name: prevData?.name,
-            approvers: prevData?.approvers.map((o) => o.appUser?.userName),
+            reviewers: prevData?.reviewers.map((o) => o.appUser?.userName),
           }}
           onSuccess={async (data) => {
             setLoading(true);
@@ -60,8 +60,8 @@ const Page = () => {
               url: `/Category/${queryParams.id}`,
               data: {
                 name: data.name,
-                approver: {
-                  appUserNames: data.approvers,
+                reviewers: {
+                  appUserNames: data.reviewers,
                 },
               },
             }).then(({ error }) => {
@@ -84,10 +84,10 @@ const Page = () => {
             />
             <div className="w-full">
               <AutocompleteElement
-                label="Approvers"
+                label="Reviewers"
                 loading={isValidating || isLoading}
                 multiple
-                name="approvers"
+                name="reviewers"
                 autocompleteProps={{ onChange: (e, v) => setSelected(v) }}
                 textFieldProps={{
                   onChange: (event) =>

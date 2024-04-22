@@ -177,7 +177,7 @@ const Layout = ({ children }) => {
               <ListItem
                 key={o.title}
                 disablePadding
-                className={pathname === o.url ? "bg-gray-200" : ""}
+                className={pathname.includes(o.url) ? "bg-gray-200" : ""}
               >
                 <ListItemButton
                   onClick={() => {
@@ -199,9 +199,13 @@ const Layout = ({ children }) => {
         <DrawerHeader />
         <ToastContainer />
         <div
-          className={`${_.includes(pathname, "create") || _.includes(pathname, "update") ? "w-2/4 mx-auto" : "w-full items-start justify-center"} `}
+          className={`${
+            _.includes(pathname, "create") || _.includes(pathname, "update")
+              ? "w-2/4 mx-auto"
+              : "w-full items-start justify-center"
+          } `}
         >
-          <Paper elevation={1} className="p-4 flex flex-col gap-5">
+          <Paper elevation={1} className="p-4 flex flex-col gap-5 min-h-96">
             <div className="flex justify-between items-center flex-wrap gap-4">
               <Breadcrumbs separator="›" aria-label="breadcrumb">
                 {breadCrumbGenerator(pathname).map((p) => (

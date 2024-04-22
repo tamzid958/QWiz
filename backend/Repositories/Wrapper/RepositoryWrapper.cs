@@ -8,8 +8,8 @@ public class RepositoryWrapper(
     IUriService uriService,
     IHttpContextAccessor httpContextAccessor) : IRepositoryWrapper
 {
-    private IApprovalLogRepository? _approvalLogRepository;
-    private IApproverRepository? _approverRepository;
+    private IReviewLogRepository? _approvalLogRepository;
+    private IReviewerRepository? _approverRepository;
     private IAppUserRepository? _appUserRepository;
     private ICategoryRepository? _categoryRepository;
     private IQuestionRepository? _questionRepository;
@@ -17,11 +17,11 @@ public class RepositoryWrapper(
     public IAppUserRepository AppUser =>
         _appUserRepository ??= new AppUserRepository(context, uriService, httpContextAccessor);
 
-    public IApprovalLogRepository ApprovalLog => _approvalLogRepository ??=
-        new ApprovalLogRepository(context, uriService, httpContextAccessor);
+    public IReviewLogRepository ReviewLog => _approvalLogRepository ??=
+        new ReviewLogRepository(context, uriService, httpContextAccessor);
 
-    public IApproverRepository Approver =>
-        _approverRepository ??= new ApproverRepository(context, uriService, httpContextAccessor);
+    public IReviewerRepository Reviewer =>
+        _approverRepository ??= new ReviewerRepository(context, uriService, httpContextAccessor);
 
     public ICategoryRepository Category =>
         _categoryRepository ??= new CategoryRepository(context, uriService, httpContextAccessor);

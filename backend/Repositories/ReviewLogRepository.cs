@@ -5,8 +5,8 @@ using QWiz.Repositories.Abstract;
 
 namespace QWiz.Repositories;
 
-public class ApprovalLogRepository(
+public class ReviewLogRepository(
     AppDbContext context,
     IUriService uriService,
     IHttpContextAccessor httpContextAccessor)
-    : BaseRepository<ApprovalLog>(context, uriService, httpContextAccessor), IApprovalLogRepository;
+    : BaseRepository<ReviewLog>(context, uriService, httpContextAccessor), IReviewLogRepository;

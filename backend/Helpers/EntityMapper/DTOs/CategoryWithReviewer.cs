@@ -2,13 +2,13 @@
 
 namespace QWiz.Helpers.EntityMapper.DTOs;
 
-public class CategoryWithApprover
+public class CategoryWithReviewer
 {
     [Required] [MaxLength(100)] public required string Name { get; set; }
 
-    [Required] public required ApproverDto Approver { get; set; }
+    [Required] public required ReviewerDto Reviewer { get; set; }
 
-    public class ApproverDto
+    public class ReviewerDto
     {
         [MinLength(1)] public required List<string> AppUserNames { set; get; }
     }

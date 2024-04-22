@@ -13,12 +13,12 @@ namespace QWiz.Controllers;
 [Produces("application/json")]
 [EnableCors("AllowOrigin")]
 [Authorize]
-public class ApproverController(ApproverService approverService) : ControllerBase
+public class ReviewerController(ReviewerService reviewerService) : ControllerBase
 {
     [HttpGet]
-    [ProducesResponseType(typeof(List<Approver>), StatusCodes.Status200OK)]
-    public IActionResult Get([FromQuery] ApproverQueries approverQueries)
+    [ProducesResponseType(typeof(List<Reviewer>), StatusCodes.Status200OK)]
+    public IActionResult Get([FromQuery] ReviewerQueries reviewerQueries)
     {
-        return Ok(approverService.Get(approverQueries));
+        return Ok(reviewerService.Get(reviewerQueries));
     }
 }

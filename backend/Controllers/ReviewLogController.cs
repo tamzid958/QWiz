@@ -15,20 +15,20 @@ namespace QWiz.Controllers;
 [Produces("application/json")]
 [EnableCors("AllowOrigin")]
 [Authorize]
-public class ApprovalLogController(ApprovalLogService approvalLogService) : ControllerBase
+public class ReviewLogController(ReviewerLogService reviewerLogService) : ControllerBase
 {
     [HttpGet]
-    [ProducesResponseType(typeof(List<ApprovalLog>), StatusCodes.Status200OK)]
-    public IActionResult Get([FromQuery] ApprovalLogQueries approvalLogQueries)
+    [ProducesResponseType(typeof(List<ReviewLog>), StatusCodes.Status200OK)]
+    public IActionResult Get([FromQuery] ReviewLogQueries reviewLogQueries)
     {
-        return Ok(approvalLogService.Get(Request, approvalLogQueries));
+        return Ok(reviewerLogService.Get(Request, reviewLogQueries));
     }
 
     [HttpPost]
-    [ProducesResponseType(typeof(ApprovalLog), StatusCodes.Status201Created)]
+    [ProducesResponseType(typeof(ReviewLog), StatusCodes.Status201Created)]
     [ProducesResponseType(typeof(ExceptionMessage), StatusCodes.Status400BadRequest)]
-    public IActionResult Create([FromBody] ApprovalLogDto approvalLog)
+    public IActionResult Create([FromBody] ReviewLogDto reviewLog)
     {
-        return Created(Request.Path.Value!, approvalLogService.Create(approvalLog));
+        return Created(Request.Path.Value!, reviewerLogService.Create(reviewLog));
     }
 }

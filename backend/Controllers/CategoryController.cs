@@ -34,21 +34,21 @@ public class CategoryController(CategoryService categoryService) : ControllerBas
     [HttpPost]
     [ProducesResponseType(typeof(Category), StatusCodes.Status201Created)]
     [ProducesResponseType(typeof(ExceptionMessage), StatusCodes.Status400BadRequest)]
-    public IActionResult Post([FromBody] CategoryWithApprover categoryWithApprover)
+    public IActionResult Post([FromBody] CategoryWithReviewer categoryWithReviewer)
     {
         if (!ModelState.IsValid) return BadRequest();
 
-        return Created(Request.Path.Value!, categoryService.Create(categoryWithApprover));
+        return Created(Request.Path.Value!, categoryService.Create(categoryWithReviewer));
     }
 
     [HttpPut("{id:int}")]
     [ProducesResponseType(typeof(Category), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(ExceptionMessage), StatusCodes.Status400BadRequest)]
-    public IActionResult Update(int id, [FromBody] CategoryWithApprover categoryWithApprover)
+    public IActionResult Update(int id, [FromBody] CategoryWithReviewer categoryWithReviewer)
     {
         if (!ModelState.IsValid) return BadRequest();
 
-        return Ok(categoryService.Update(id, categoryWithApprover));
+        return Ok(categoryService.Update(id, categoryWithReviewer));
     }
 
     [HttpDelete("{id:int}")]

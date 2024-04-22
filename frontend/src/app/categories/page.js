@@ -41,7 +41,7 @@ const Category = () => {
             <TableRow>
               <TableCell>ID</TableCell>
               <TableCell>Name</TableCell>
-              <TableCell align="center">Approvers</TableCell>
+              <TableCell align="center">Reviewers</TableCell>
               <TableCell>Created by</TableCell>
               <TableCell>Created at</TableCell>
               <TableCell align="center">Actions</TableCell>
@@ -53,7 +53,7 @@ const Category = () => {
                 <TableCell>{datum.id}</TableCell>
                 <TableCell>{datum.name}</TableCell>
                 <TableCell align="center">
-                  {datum.approvers.map((o) => (
+                  {datum.reviewers.map((o) => (
                     <Chip
                       className="mx-1"
                       key={o.id}

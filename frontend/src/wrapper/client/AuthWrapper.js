@@ -19,6 +19,11 @@ const AuthWrapper = ({ children }) => {
       !_.includes(publicPages, pathname)
     ) {
       router.push("/auth/login");
+    } else if (
+      session?.status === "authenticated" &&
+      pathname === "/auth/login"
+    ) {
+      router.push("/dashboard");
     }
   }, [pathname, router, session]);
 

@@ -8,9 +8,11 @@ import { signIn } from "next-auth/react";
 import { LoadingButton } from "@mui/lab";
 import { useState } from "react";
 import { toast, ToastContainer } from "react-toastify";
+import { useRouter } from "next/navigation";
 
 const Page = () => {
   const [loading, setLoading] = useState(false);
+  const router = useRouter();
   return (
     <div className="h-screen flex items-center justify-center bg-gradient-to-br from-black to-gray-900">
       <ToastContainer />
@@ -33,10 +35,11 @@ const Page = () => {
             await signIn("credentials", {
               username: data.username,
               password: data.password,
-              redirect: true,
-              callbackUrl: "/",
             })
-              .then(() => toast.success("Logged in successfully"))
+              .then(() => {
+                router.push("/dashboard");
+                return toast.success("Logged in successfully");
+              })
               .catch((e) => setLoading(false));
           }}
         >

@@ -10,7 +10,7 @@ public class CategoryService(
     public List<Category> Get(HttpRequest request)
     {
         return repositoryWrapper.Category.GetAll(
-            category => category.Approvers.Select(x => x.AppUser),
+            category => category.Reviewers.Select(x => x.AppUser),
             category => category.CreatedBy!
         );
     }
@@ -18,28 +18,28 @@ public class CategoryService(
     public Category GetById(int id)
     {
         return repositoryWrapper.Category.GetFirstBy(o => o.Id == id,
-            category => category.Approvers.Select(x => x.AppUser)
+            category => category.Reviewers.Select(x => x.AppUser)
         );
     }
 
-    public Category Create(CategoryWithApprover categoryWithApprover)
+    public Category Create(CategoryWithReviewer categoryWithReviewer)
     {
         var category = repositoryWrapper.Category.Insert(new Category
         {
-            Name = categoryWithApprover.Name
+            Name = categoryWithReviewer.Name
         });
 
-        CreateMultiple(category, categoryWithApprover.Approver.AppUserNames);
+        CreateMultiple(category, categoryWithReviewer.Reviewer.AppUserNames);
 
         return category;
     }
 
-    public Category Update(int id, CategoryWithApprover categoryWithApprover)
+    public Category Update(int id, CategoryWithReviewer categoryWithReviewer)
     {
         var category = repositoryWrapper.Category.GetById(id);
-        category.Name = categoryWithApprover.Name;
+        category.Name = categoryWithReviewer.Name;
 
-        UpdateMultiple(category, categoryWithApprover.Approver.AppUserNames);
+        UpdateMultiple(category, categoryWithReviewer.Reviewer.AppUserNames);
 
         return category;
     }
@@ -80,31 +80,31 @@ public class CategoryService(
 
     private void DeleteByCategory(int id)
     {
-        repositoryWrapper.Approver.Delete(o => o.CategoryId == id);
+        repositoryWrapper.Reviewer.Delete(o => o.CategoryId == id);
     }
 
     private void CreateMultiple(Category category, List<string> appUserNames)
     {
-        var approvers = appUserNames.ConvertAll(appUserName => new Approver
+        var approvers = appUserNames.ConvertAll(appUserName => new Reviewer
         {
             CategoryId = category.Id,
             AppUserId = repositoryWrapper.AppUser.GetFirstBy(o => o.UserName == appUserName).Id,
             CreatedById = category.CreatedBy!.Id
         });
 
-        repositoryWrapper.Approver.Insert(approvers);
+        repositoryWrapper.Reviewer.Insert(approvers);
     }
 
     private void UpdateMultiple(Category category, List<string> appUserNames)
     {
-        repositoryWrapper.Approver.Delete(o => o.Category == category);
+        repositoryWrapper.Reviewer.Delete(o => o.Category == category);
 
-        var approvers = appUserNames.ConvertAll(appUserName => new Approver
+        var approvers = appUserNames.ConvertAll(appUserName => new Reviewer
         {
             CategoryId = category.Id,
             AppUserId = repositoryWrapper.AppUser.GetFirstBy(o => o.UserName == appUserName).Id
         });
 
-        repositoryWrapper.Approver.Insert(approvers);
+        repositoryWrapper.Reviewer.Insert(approvers);
     }
 }

@@ -181,40 +181,6 @@ namespace QWiz.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Approvers",
-                columns: table => new
-                {
-                    Id = table.Column<long>(type: "bigint", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    CategoryId = table.Column<int>(type: "int", nullable: false),
-                    AppUserId = table.Column<string>(type: "nvarchar(450)", nullable: false),
-                    CreatedById = table.Column<string>(type: "nvarchar(450)", nullable: true),
-                    CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    UpdatedAt = table.Column<DateTime>(type: "datetime2", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Approvers", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_Approvers_AspNetUsers_AppUserId",
-                        column: x => x.AppUserId,
-                        principalTable: "AspNetUsers",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_Approvers_AspNetUsers_CreatedById",
-                        column: x => x.CreatedById,
-                        principalTable: "AspNetUsers",
-                        principalColumn: "Id");
-                    table.ForeignKey(
-                        name: "FK_Approvers_Categories_CategoryId",
-                        column: x => x.CategoryId,
-                        principalTable: "Categories",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "Questions",
                 columns: table => new
                 {
@@ -223,6 +189,8 @@ namespace QWiz.Migrations
                     Title = table.Column<string>(type: "nvarchar(400)", maxLength: 400, nullable: false),
                     Description = table.Column<string>(type: "nvarchar(max)", maxLength: 5000, nullable: true),
                     QuestionType = table.Column<string>(type: "varchar(30)", nullable: false),
+                    IsAddedToQuestionBank = table.Column<bool>(type: "bit", nullable: true),
+                    IsReadyForAddingQuestionBank = table.Column<bool>(type: "bit", nullable: false),
                     CategoryId = table.Column<int>(type: "int", nullable: false),
                     CreatedById = table.Column<string>(type: "nvarchar(450)", nullable: true),
                     CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
@@ -245,7 +213,41 @@ namespace QWiz.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "ApprovalLogs",
+                name: "Reviewers",
+                columns: table => new
+                {
+                    Id = table.Column<long>(type: "bigint", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    CategoryId = table.Column<int>(type: "int", nullable: false),
+                    AppUserId = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    CreatedById = table.Column<string>(type: "nvarchar(450)", nullable: true),
+                    CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    UpdatedAt = table.Column<DateTime>(type: "datetime2", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Reviewers", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Reviewers_AspNetUsers_AppUserId",
+                        column: x => x.AppUserId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_Reviewers_AspNetUsers_CreatedById",
+                        column: x => x.CreatedById,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id");
+                    table.ForeignKey(
+                        name: "FK_Reviewers_Categories_CategoryId",
+                        column: x => x.CategoryId,
+                        principalTable: "Categories",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "ReviewLogs",
                 columns: table => new
                 {
                     Id = table.Column<long>(type: "bigint", nullable: false)
@@ -259,14 +261,14 @@ namespace QWiz.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_ApprovalLogs", x => x.Id);
+                    table.PrimaryKey("PK_ReviewLogs", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_ApprovalLogs_AspNetUsers_CreatedById",
+                        name: "FK_ReviewLogs_AspNetUsers_CreatedById",
                         column: x => x.CreatedById,
                         principalTable: "AspNetUsers",
                         principalColumn: "Id");
                     table.ForeignKey(
-                        name: "FK_ApprovalLogs_Questions_QuestionId",
+                        name: "FK_ReviewLogs_Questions_QuestionId",
                         column: x => x.QuestionId,
                         principalTable: "Questions",
                         principalColumn: "Id",
@@ -278,45 +280,20 @@ namespace QWiz.Migrations
                 columns: new[] { "Id", "ConcurrencyStamp", "Name", "NormalizedName" },
                 values: new object[,]
                 {
-                    { "2c115c7c-46e0-4809-b641-fd657eeda382", null, "QuestionSetter", "QUESTIONSETTER" },
                     { "341743f0-asd2–42de-afbf-59kmkkmk72cf6", "341743f0-asd2–42de-afbf-59kmkkmk72cf6", "Admin", "ADMIN" },
-                    { "7428720f-870e-4856-92c6-cf4b136d51f7", null, "Reviewer", "REVIEWER" }
+                    { "82ffe765-fcce-4780-a139-55f354b8f924", null, "QuestionSetter", "QUESTIONSETTER" },
+                    { "c38e23fe-a8f1-4037-b603-63bf6c9ada95", null, "Reviewer", "REVIEWER" }
                 });
 
             migrationBuilder.InsertData(
                 table: "AspNetUsers",
                 columns: new[] { "Id", "AccessFailedCount", "ConcurrencyStamp", "Email", "EmailConfirmed", "FullName", "LockoutEnabled", "LockoutEnd", "NormalizedEmail", "NormalizedUserName", "PasswordHash", "PhoneNumber", "PhoneNumberConfirmed", "SecurityStamp", "TwoFactorEnabled", "UserName" },
-                values: new object[] { "02174cf0–9412–4cfe-afbf-59f706d72cf6", 0, "6b03704d-fffc-4f04-925e-226c3f03b48c", "tamjidahmed958@gmail.com", true, "Tamzid Ahmed", false, null, null, "TAMZID", "AQAAAAIAAYagAAAAEPLf8GMV/bkUL/NESw2Ev1t+QtXgRPdFyTVDEsvY8urxBN4Ulyu/K27UUgEkQUn8qw==", null, false, "0728a9e8-08c0-4825-9451-c33ee6560c31", false, "tamzid" });
+                values: new object[] { "02174cf0–9412–4cfe-afbf-59f706d72cf6", 0, "16af3765-98d3-41d6-b972-0fd81fb20c13", "tamjidahmed958@gmail.com", true, "Tamzid Ahmed", false, null, null, "TAMZID", "AQAAAAIAAYagAAAAEKF5Hk4w6gR6vqaSuTNzOhg11Uten0eYbbU1cf0g7WSomOgG3+2Nr5d5L70JrTPmFw==", null, false, "b653f1c0-91e1-448c-a4ca-dc7c6a1d319e", false, "tamzid" });
 
             migrationBuilder.InsertData(
                 table: "AspNetUserRoles",
                 columns: new[] { "RoleId", "UserId" },
                 values: new object[] { "341743f0-asd2–42de-afbf-59kmkkmk72cf6", "02174cf0–9412–4cfe-afbf-59f706d72cf6" });
-
-            migrationBuilder.CreateIndex(
-                name: "IX_ApprovalLogs_CreatedById",
-                table: "ApprovalLogs",
-                column: "CreatedById");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_ApprovalLogs_QuestionId",
-                table: "ApprovalLogs",
-                column: "QuestionId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Approvers_AppUserId",
-                table: "Approvers",
-                column: "AppUserId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Approvers_CategoryId",
-                table: "Approvers",
-                column: "CategoryId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Approvers_CreatedById",
-                table: "Approvers",
-                column: "CreatedById");
 
             migrationBuilder.CreateIndex(
                 name: "IX_AspNetRoleClaims_RoleId",
@@ -377,17 +354,36 @@ namespace QWiz.Migrations
                 name: "IX_Questions_CreatedById",
                 table: "Questions",
                 column: "CreatedById");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Reviewers_AppUserId",
+                table: "Reviewers",
+                column: "AppUserId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Reviewers_CategoryId",
+                table: "Reviewers",
+                column: "CategoryId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Reviewers_CreatedById",
+                table: "Reviewers",
+                column: "CreatedById");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_ReviewLogs_CreatedById",
+                table: "ReviewLogs",
+                column: "CreatedById");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_ReviewLogs_QuestionId",
+                table: "ReviewLogs",
+                column: "QuestionId");
         }
 
         /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.DropTable(
-                name: "ApprovalLogs");
-
-            migrationBuilder.DropTable(
-                name: "Approvers");
-
             migrationBuilder.DropTable(
                 name: "AspNetRoleClaims");
 
@@ -404,10 +400,16 @@ namespace QWiz.Migrations
                 name: "AspNetUserTokens");
 
             migrationBuilder.DropTable(
-                name: "Questions");
+                name: "Reviewers");
+
+            migrationBuilder.DropTable(
+                name: "ReviewLogs");
 
             migrationBuilder.DropTable(
                 name: "AspNetRoles");
+
+            migrationBuilder.DropTable(
+                name: "Questions");
 
             migrationBuilder.DropTable(
                 name: "Categories");

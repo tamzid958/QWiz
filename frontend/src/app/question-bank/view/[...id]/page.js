@@ -14,7 +14,6 @@ import {
   StepContent,
   StepLabel,
   Stepper,
-  TextField,
   Typography,
 } from "@mui/material";
 import { Parser as HtmlToReactParser } from "html-to-react";
@@ -25,15 +24,8 @@ import Box from "@mui/material/Box";
 import { formatDate, sortByBooleanProperty } from "@/utils/common";
 import { Check, PanTool } from "@mui/icons-material";
 import { Cancel } from "axios";
-import { useSession } from "next-auth/react";
 
-const Confirmation = ({
-  approved,
-  open,
-  handleClose,
-  mutate,
-  reviewLogMutate,
-}) => {
+const Confirmation = ({ open, handleClose, mutate }) => {
   const params = useParams();
 
   return (
@@ -44,48 +36,28 @@ const Confirmation = ({
         component: "form",
         onSubmit: async (event) => {
           event.preventDefault();
-          const formData = new FormData(event.currentTarget);
-          const formJson = Object.fromEntries(formData.entries());
-          const comment = formJson.comment;
 
           await requestApi({
-            method: "POST",
-            url: "/ReviewLog",
-            data: {
-              questionId: Number(params.id),
-              isApproved: approved,
-              comment: comment,
-            },
+            method: "PATCH",
+            url: `/Question/AddToBank/${params.id}`,
           }).then(({ error }) => {
             error
-              ? toast.error("Review creation  failed")
-              : toast.success("Review successfully added");
+              ? toast.error("Add question to bank failed")
+              : toast.success("Added in question bank");
 
             !error && mutate();
-            !error && reviewLogMutate();
           });
 
           handleClose();
         },
       }}
     >
-      <DialogTitle>Add Comment</DialogTitle>
+      <DialogTitle>Confirmation</DialogTitle>
       <DialogContent>
         <DialogContentText>
-          Start by clearly summarizing your main points or reactions to the
-          content. Provide specific examples or evidence to support your
-          comments. Conclude by offering constructive feedback or suggestions
-          for improvement.
+          By accepting this question for the set, you are confirming its
+          inclusion. Proceeding will finalize this action.
         </DialogContentText>
-        <TextField
-          autoFocus
-          margin="dense"
-          id="comment"
-          name="comment"
-          label="Comment"
-          fullWidth
-          variant="standard"
-        />
       </DialogContent>
       <DialogActions>
         <Button onClick={handleClose}>Cancel</Button>
@@ -110,10 +82,8 @@ const Page = () => {
   const params = useParams();
   const { data, mutate } = useSWR({ url: `/Question/${params.id}` });
   const htmlToReactParser = new HtmlToReactParser();
-  const [approved, setApproved] = useState(false);
   const [dialogOpen, setDialogOpen] = useState(false);
   const [activeStep, setActiveStep] = useState(null);
-  const { data: userData } = useSession();
   const { data: reviewerData } = useSWR(
     data
       ? {
@@ -125,7 +95,7 @@ const Page = () => {
       : null,
   );
 
-  const { data: reviewLogData, mutate: reviewLogMutate } = useSWR(
+  const { data: reviewLogData } = useSWR(
     data
       ? {
           url: "/ReviewLog",
@@ -136,8 +106,7 @@ const Page = () => {
       : null,
   );
 
-  const handleApproval = (approved) => {
-    setApproved(approved);
+  const handleApproval = () => {
     setDialogOpen(true);
   };
 
@@ -159,25 +128,18 @@ const Page = () => {
         <div className="max-h-96 overflow-auto text-sm">
           {htmlToReactParser.parse(data.description)}
         </div>
-        {reviewerWithLog.find((o) => o.appUserId === userData.user.id).log ===
-          null && (
-          <div className="flex gap-2 mt-5">
-            <Button
-              variant="contained"
-              color="primary"
-              onClick={() => handleApproval(true)}
-            >
-              Approve
-            </Button>
-            <Button
-              variant="contained"
-              color="error"
-              onClick={() => handleApproval(false)}
-            >
-              Reject
-            </Button>
-          </div>
-        )}
+        {data.isReadyForAddingQuestionBank &&
+          data.IsAddedToQuestionBank === null && (
+            <div className="mt-5">
+              <Button
+                variant="contained"
+                color="primary"
+                onClick={() => handleApproval()}
+              >
+                Add to Question Bank
+              </Button>
+            </div>
+          )}
       </div>
       <div className="w-1/2 border-2 border-gray-300 p-2 rounded">
         <Typography variant="h4" gutterBottom className="mb-2">
@@ -233,8 +195,6 @@ const Page = () => {
         {...{
           open: dialogOpen,
           mutate,
-          reviewLogMutate,
-          approved,
           handleClose: () => {
             setDialogOpen(false);
           },

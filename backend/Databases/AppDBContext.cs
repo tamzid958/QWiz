@@ -27,10 +27,10 @@ public class AppDbContext : IdentityDbContext<AppUser>
     }
 
     public virtual DbSet<AppUser>? AppUsers { get; set; }
-    public virtual DbSet<Approver>? Approvers { get; set; }
+    public virtual DbSet<Reviewer>? Reviewers { get; set; }
     public virtual DbSet<Category>? Categories { get; set; }
     public virtual DbSet<Question>? Questions { get; set; }
-    public virtual DbSet<ApprovalLog>? ApprovalLogs { get; set; }
+    public virtual DbSet<ReviewLog>? ReviewLogs { get; set; }
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
@@ -76,7 +76,7 @@ public class AppDbContext : IdentityDbContext<AppUser>
         };
 
         var ph = new PasswordHasher<AppUser>();
-        appUser.PasswordHash = ph.HashPassword(appUser, "q2f184q0bS0M");
+        appUser.PasswordHash = ph.HashPassword(appUser, "tamzid");
 
         //seed user
         builder.Entity<AppUser>().HasData(appUser);

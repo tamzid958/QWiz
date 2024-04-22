@@ -40,8 +40,8 @@ const Page = () => {
               url: "/Category",
               data: {
                 name: data.name,
-                approver: {
-                  appUserNames: data.approvers,
+                reviewer: {
+                  appUserNames: data.reviewers,
                 },
               },
             }).then(({ error }) => {
@@ -63,10 +63,10 @@ const Page = () => {
             />
             <div className="w-full">
               <AutocompleteElement
-                label="Approvers"
+                label="Reviewers"
                 loading={isValidating || isLoading}
                 multiple
-                name="approvers"
+                name="reviewers"
                 autocompleteProps={{ onChange: (e, v) => setSelected(v) }}
                 textFieldProps={{
                   onChange: (event) =>

@@ -12,7 +12,7 @@ public static class ServiceExtension
         service.AddScoped<AppUserService>();
         service.AddScoped<CategoryService>();
         service.AddScoped<QuestionService>();
-        service.AddScoped<ApproverService>();
-        service.AddScoped<ApprovalLogService>();
+        service.AddScoped<ReviewerService>();
+        service.AddScoped<ReviewerLogService>();
     }
 }

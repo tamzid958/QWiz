@@ -1,5 +1,6 @@
 import {
   Category,
+  Collections,
   Dashboard,
   QuestionAnswer,
   ReviewsSharp,
@@ -10,8 +11,14 @@ const navigationLinks = [
   {
     title: "Dashboard",
     icon: <Dashboard />,
-    url: "/",
+    url: "/dashboard",
     access: ["Admin", "Reviewer", "QuestionSetter"],
+  },
+  {
+    title: "Question Bank",
+    icon: <Collections />,
+    url: "/question-bank",
+    access: ["Admin"],
   },
   {
     title: "Question",

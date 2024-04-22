@@ -32,10 +32,10 @@ public class EntityProfile : Profile
 
         CreateMap<QuestionDto, Question>()
             .ForMember(o => o.Category, c => c.Ignore())
-            .ForMember(o => o.ApprovalLogs, c => c.Ignore())
+            .ForMember(o => o.ReviewLogs, c => c.Ignore())
             .ForAllMembers(opts => opts.Condition((_, _, srcMember) => srcMember != null));
 
-        CreateMap<ApprovalLogDto, ApprovalLog>()
+        CreateMap<ReviewLogDto, ReviewLog>()
             .ForMember(o => o.Question, c => c.Ignore())
             .ForAllMembers(opts => opts.Condition((_, _, srcMember) => srcMember != null));
     }

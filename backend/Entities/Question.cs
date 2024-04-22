@@ -17,9 +17,11 @@ public class Question : AbstractAuditable<long, AppUser, string>
 
     public bool? IsAddedToQuestionBank { set; get; }
 
+    public bool IsReadyForAddingQuestionBank { set; get; }
+
     public required int CategoryId { set; get; }
 
     [ForeignKey("CategoryId")] [Required] public required Category Category { set; get; }
 
-    public ICollection<ApprovalLog> ApprovalLogs { get; set; } = new HashSet<ApprovalLog>();
+    public ICollection<ReviewLog> ReviewLogs { get; set; } = new HashSet<ReviewLog>();
 }

@@ -70,7 +70,7 @@ const breadCrumbGenerator = (pathName) => {
     breadcrumbs.push(breadcrumb);
   });
 
-  return forUpdatePaths([{ name: "Dashboard", path: "/" }].concat(breadcrumbs));
+  return forUpdatePaths(breadcrumbs);
 };
 
 function forUpdatePaths(items) {
@@ -106,9 +106,34 @@ const formatDate = (date) => {
   return dateFormat(new Date(date), "dddd, mmmm dS, yyyy, h:MM TT");
 };
 
+function sortByBooleanProperty(objects, propertyName) {
+  const order = {
+    true: 1,
+    false: 2,
+    null: 3,
+  };
+
+  const getNestedPropertyValue = (obj, keys) => {
+    if (!obj || !keys.length) return null;
+    const [currentKey, ...remainingKeys] = keys;
+    const nextObj = obj[currentKey];
+    return remainingKeys.length
+      ? getNestedPropertyValue(nextObj, remainingKeys)
+      : nextObj;
+  };
+
+  return objects.sort((a, b) => {
+    const aValue = getNestedPropertyValue(a, propertyName.split("."));
+    const bValue = getNestedPropertyValue(b, propertyName.split("."));
+
+    return (order[aValue] || 0) - (order[bValue] || 0);
+  });
+}
+
 export {
   getLettersFromString,
   textToDarkLightColor,
   breadCrumbGenerator,
   formatDate,
+  sortByBooleanProperty,
 };

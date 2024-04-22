@@ -56,6 +56,14 @@ public class QuestionController(QuestionService questionService) : ControllerBas
         return Ok(questionService.Update(id, question));
     }
 
+    [HttpPatch("AddToBank/{id:long}")]
+    [ProducesResponseType(typeof(Question), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(ExceptionMessage), StatusCodes.Status400BadRequest)]
+    public IActionResult AddToQuestionBank(long id)
+    {
+        return Ok(questionService.AddToQuestionBank(id));
+    }
+
     [HttpDelete("{id:long}")]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     [ProducesResponseType(typeof(ExceptionMessage), StatusCodes.Status404NotFound)]

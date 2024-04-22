@@ -15,7 +15,15 @@ public class QuestionService(IRepositoryWrapper repositoryWrapper, IMapper mappe
         QuestionQueries questionQueries)
     {
         return repositoryWrapper.Question.GetAll(paginationFilter, request,
-            question => questionQueries.CategoryId == null || question.CategoryId == questionQueries.CategoryId,
+            question => (questionQueries.CategoryId == null || question.CategoryId == questionQueries.CategoryId) &&
+                        (
+                            questionQueries.IsReadyForAddingQuestionBank == null ||
+                            question.IsReadyForAddingQuestionBank == questionQueries.IsReadyForAddingQuestionBank
+                        ) &&
+                        (
+                            questionQueries.IsAddedToQuestionBank == null ||
+                            question.IsAddedToQuestionBank == questionQueries.IsAddedToQuestionBank
+                        ),
             question => question.Category,
             question => question.CreatedBy!
         );
@@ -52,5 +60,12 @@ public class QuestionService(IRepositoryWrapper repositoryWrapper, IMapper mappe
             .Cast<QuestionType>()
             .Select(v => v.ToString())
             .ToList();
+    }
+
+    public Question AddToQuestionBank(long id)
+    {
+        var question = repositoryWrapper.Question.GetById(id);
+        question.IsAddedToQuestionBank = true;
+        return repositoryWrapper.Question.Update(question);
     }
 }

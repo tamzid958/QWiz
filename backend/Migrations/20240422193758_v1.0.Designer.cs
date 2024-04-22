@@ -12,8 +12,8 @@ using QWiz.Databases;
 namespace QWiz.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20240422094357_v1.1")]
-    partial class v11
+    [Migration("20240422193758_v1.0")]
+    partial class v10
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -61,13 +61,13 @@ namespace QWiz.Migrations
                         },
                         new
                         {
-                            Id = "800c0842-b1db-4282-9afc-d8c28dd655e7",
+                            Id = "c38e23fe-a8f1-4037-b603-63bf6c9ada95",
                             Name = "Reviewer",
                             NormalizedName = "REVIEWER"
                         },
                         new
                         {
-                            Id = "dcd9569f-48e5-49af-a63d-7ae92a2be76f",
+                            Id = "82ffe765-fcce-4780-a139-55f354b8f924",
                             Name = "QuestionSetter",
                             NormalizedName = "QUESTIONSETTER"
                         });
@@ -262,89 +262,18 @@ namespace QWiz.Migrations
                         {
                             Id = "02174cf0–9412–4cfe-afbf-59f706d72cf6",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "a8256a43-f378-4512-99f2-50e0fbd36177",
+                            ConcurrencyStamp = "16af3765-98d3-41d6-b972-0fd81fb20c13",
                             Email = "tamjidahmed958@gmail.com",
                             EmailConfirmed = true,
                             FullName = "Tamzid Ahmed",
                             LockoutEnabled = false,
                             NormalizedUserName = "TAMZID",
-                            PasswordHash = "AQAAAAIAAYagAAAAEINlkbo3JReoNzHPWR1ol9NLFM2pu86u7H3CitkO0y2F1XKEnWMbED02YtqGot7JyQ==",
+                            PasswordHash = "AQAAAAIAAYagAAAAEKF5Hk4w6gR6vqaSuTNzOhg11Uten0eYbbU1cf0g7WSomOgG3+2Nr5d5L70JrTPmFw==",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "b70e5c3f-e351-464b-aeaa-bd13870b12ad",
+                            SecurityStamp = "b653f1c0-91e1-448c-a4ca-dc7c6a1d319e",
                             TwoFactorEnabled = false,
                             UserName = "tamzid"
                         });
-                });
-
-            modelBuilder.Entity("QWiz.Entities.ApprovalLog", b =>
-                {
-                    b.Property<long>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("bigint");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("Id"));
-
-                    b.Property<string>("Comment")
-                        .HasMaxLength(600)
-                        .HasColumnType("nvarchar(600)");
-
-                    b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("CreatedById")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<bool>("IsApproved")
-                        .HasColumnType("bit");
-
-                    b.Property<long>("QuestionId")
-                        .HasColumnType("bigint");
-
-                    b.Property<DateTime>("UpdatedAt")
-                        .HasColumnType("datetime2");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("CreatedById");
-
-                    b.HasIndex("QuestionId");
-
-                    b.ToTable("ApprovalLogs");
-                });
-
-            modelBuilder.Entity("QWiz.Entities.Approver", b =>
-                {
-                    b.Property<long>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("bigint");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("Id"));
-
-                    b.Property<string>("AppUserId")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<int>("CategoryId")
-                        .HasColumnType("int");
-
-                    b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("CreatedById")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<DateTime>("UpdatedAt")
-                        .HasColumnType("datetime2");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("AppUserId");
-
-                    b.HasIndex("CategoryId");
-
-                    b.HasIndex("CreatedById");
-
-                    b.ToTable("Approvers");
                 });
 
             modelBuilder.Entity("QWiz.Entities.Category", b =>
@@ -403,6 +332,9 @@ namespace QWiz.Migrations
                     b.Property<bool?>("IsAddedToQuestionBank")
                         .HasColumnType("bit");
 
+                    b.Property<bool>("IsReadyForAddingQuestionBank")
+                        .HasColumnType("bit");
+
                     b.Property<string>("QuestionType")
                         .IsRequired()
                         .HasColumnType("varchar(30)");
@@ -422,6 +354,77 @@ namespace QWiz.Migrations
                     b.HasIndex("CreatedById");
 
                     b.ToTable("Questions");
+                });
+
+            modelBuilder.Entity("QWiz.Entities.ReviewLog", b =>
+                {
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("Id"));
+
+                    b.Property<string>("Comment")
+                        .HasMaxLength(600)
+                        .HasColumnType("nvarchar(600)");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("CreatedById")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<bool>("IsApproved")
+                        .HasColumnType("bit");
+
+                    b.Property<long>("QuestionId")
+                        .HasColumnType("bigint");
+
+                    b.Property<DateTime>("UpdatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CreatedById");
+
+                    b.HasIndex("QuestionId");
+
+                    b.ToTable("ReviewLogs");
+                });
+
+            modelBuilder.Entity("QWiz.Entities.Reviewer", b =>
+                {
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("Id"));
+
+                    b.Property<string>("AppUserId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<int>("CategoryId")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("CreatedById")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<DateTime>("UpdatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("AppUserId");
+
+                    b.HasIndex("CategoryId");
+
+                    b.HasIndex("CreatedById");
+
+                    b.ToTable("Reviewers");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -475,48 +478,6 @@ namespace QWiz.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("QWiz.Entities.ApprovalLog", b =>
-                {
-                    b.HasOne("QWiz.Entities.AppUser", "CreatedBy")
-                        .WithMany()
-                        .HasForeignKey("CreatedById");
-
-                    b.HasOne("QWiz.Entities.Question", "Question")
-                        .WithMany("ApprovalLogs")
-                        .HasForeignKey("QuestionId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("CreatedBy");
-
-                    b.Navigation("Question");
-                });
-
-            modelBuilder.Entity("QWiz.Entities.Approver", b =>
-                {
-                    b.HasOne("QWiz.Entities.AppUser", "AppUser")
-                        .WithMany()
-                        .HasForeignKey("AppUserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("QWiz.Entities.Category", "Category")
-                        .WithMany("Approvers")
-                        .HasForeignKey("CategoryId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("QWiz.Entities.AppUser", "CreatedBy")
-                        .WithMany()
-                        .HasForeignKey("CreatedById");
-
-                    b.Navigation("AppUser");
-
-                    b.Navigation("Category");
-
-                    b.Navigation("CreatedBy");
-                });
-
             modelBuilder.Entity("QWiz.Entities.Category", b =>
                 {
                     b.HasOne("QWiz.Entities.AppUser", "CreatedBy")
@@ -543,16 +504,58 @@ namespace QWiz.Migrations
                     b.Navigation("CreatedBy");
                 });
 
+            modelBuilder.Entity("QWiz.Entities.ReviewLog", b =>
+                {
+                    b.HasOne("QWiz.Entities.AppUser", "CreatedBy")
+                        .WithMany()
+                        .HasForeignKey("CreatedById");
+
+                    b.HasOne("QWiz.Entities.Question", "Question")
+                        .WithMany("ReviewLogs")
+                        .HasForeignKey("QuestionId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("CreatedBy");
+
+                    b.Navigation("Question");
+                });
+
+            modelBuilder.Entity("QWiz.Entities.Reviewer", b =>
+                {
+                    b.HasOne("QWiz.Entities.AppUser", "AppUser")
+                        .WithMany()
+                        .HasForeignKey("AppUserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("QWiz.Entities.Category", "Category")
+                        .WithMany("Reviewers")
+                        .HasForeignKey("CategoryId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("QWiz.Entities.AppUser", "CreatedBy")
+                        .WithMany()
+                        .HasForeignKey("CreatedById");
+
+                    b.Navigation("AppUser");
+
+                    b.Navigation("Category");
+
+                    b.Navigation("CreatedBy");
+                });
+
             modelBuilder.Entity("QWiz.Entities.Category", b =>
                 {
-                    b.Navigation("Approvers");
-
                     b.Navigation("Questions");
+
+                    b.Navigation("Reviewers");
                 });
 
             modelBuilder.Entity("QWiz.Entities.Question", b =>
                 {
-                    b.Navigation("ApprovalLogs");
+                    b.Navigation("ReviewLogs");
                 });
 #pragma warning restore 612, 618
         }

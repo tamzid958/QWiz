@@ -3,7 +3,7 @@ using QWiz.Entities.Abstract;
 
 namespace QWiz.Helpers.EntityMapper.DTOs;
 
-public class ApprovalLogDto : AbstractPersistence<long>
+public class ReviewLogDto : AbstractPersistence<long>
 {
     public required long QuestionId { set; get; }
     public bool IsApproved { set; get; }

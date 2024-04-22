@@ -2,7 +2,7 @@
 
 namespace QWiz.Helpers.HttpQueries;
 
-public class ApprovalLogQueries
+public class ReviewLogQueries
 {
     [FromQuery(Name = "questionId")] public long? QuestionId { set; get; }
 }
