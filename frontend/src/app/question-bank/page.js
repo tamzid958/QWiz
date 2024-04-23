@@ -106,7 +106,7 @@ const Page = () => {
       <FormControlLabel
         checked={reviewMode}
         control={<Switch />}
-        label="Review Mode"
+        label={reviewMode ? "Review Mode" : "Bank Mode"}
         onChange={handleChange}
       />
       <div className="w-full">

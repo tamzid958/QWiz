@@ -34,7 +34,8 @@ public class QuestionService(
                         (
                             questionQueries.IsAddedToQuestionBank == null ||
                             question.IsAddedToQuestionBank == questionQueries.IsAddedToQuestionBank
-                        ) && (
+                        ) &&
+                        (
                             isQuestionSetter
                                 ? question.CreatedById == currentUser.Id
                                 : isAdmin ||
@@ -42,6 +43,20 @@ public class QuestionService(
                                       isReviewer && question.Category.Reviewers.Any(reviewer =>
                                           reviewer.AppUserId == currentUser.Id)
                                   )
+                        ) &&
+                        (
+                            questionQueries.ReviewMode == null ||
+                            (
+                                isReviewer && questionQueries.ReviewMode == ReviewMode.Reviewed
+                                    ? question.ReviewLogs.Any(log => log.CreatedById == currentUser.Id)
+                                    : isReviewer && questionQueries.ReviewMode == ReviewMode.UnderReview
+                                        ? question.ReviewLogs.All(log => log.CreatedById != currentUser.Id)
+                                        : isAdmin && questionQueries.ReviewMode == ReviewMode.Reviewed
+                                            ? question.IsReadyForAddingQuestionBank == true
+                                            : isAdmin && questionQueries.ReviewMode == ReviewMode.UnderReview
+                                                ? question.IsReadyForAddingQuestionBank == false
+                                                : isQuestionSetter
+                            )
                         ),
             question => question.Category,
             question => question.ReviewLogs,

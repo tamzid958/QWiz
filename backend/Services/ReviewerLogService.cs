@@ -32,23 +32,18 @@ public class ReviewerLogService(
     private void UpdateQuestionBasedApprovalLog(ReviewLog reviewLog)
     {
         var question = repositoryWrapper.Question.GetFirstBy(o => o.Id == reviewLog.QuestionId);
-        var approvers = repositoryWrapper.Reviewer.GetAll(
-            o => o.Category == question.Category &&
-                 o.AppUser != authenticationService.GetCurrentUser()
-        );
+        var reviewers = repositoryWrapper.Reviewer.GetAll(
+                o => o.CategoryId == question.CategoryId
+            ).Where(reviewer => reviewer.AppUserId != question.CreatedById)
+            .ToList();
 
-        var approvalLogs = repositoryWrapper.ReviewLog.GetAll(
+        var reviewLogs = repositoryWrapper.ReviewLog.GetAll(
             o => o.QuestionId == reviewLog.QuestionId
         );
 
-        var isAllApproverReviewed =
-            approvers.All(
-                approver => approvalLogs
-                    .Select(x => x.CreatedBy)
-                    .Contains(approver.AppUser)
-            );
+        var isAllReviewerReviewed = reviewers.Count == reviewLogs.Count;
 
-        if (!isAllApproverReviewed) return;
+        if (!isAllReviewerReviewed) return;
         question.IsReadyForAddingQuestionBank = true;
         repositoryWrapper.Question.Update(question);
     }

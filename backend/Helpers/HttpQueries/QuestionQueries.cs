@@ -11,4 +11,12 @@ public class QuestionQueries
 
     [FromQuery(Name = "issAddedToQuestionBank")]
     public bool? IsAddedToQuestionBank { set; get; }
+
+    [FromQuery(Name = "reviewMode")] public ReviewMode? ReviewMode { set; get; }
+}
+
+public enum ReviewMode
+{
+    Reviewed,
+    UnderReview
 }

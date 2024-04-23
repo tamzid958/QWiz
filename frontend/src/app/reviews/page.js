@@ -5,6 +5,8 @@ import {
   AccordionDetails,
   AccordionSummary,
   Button,
+  FormControlLabel,
+  Switch,
   Table,
   TableBody,
   TableCell,
@@ -19,7 +21,7 @@ import useSWR from "swr";
 import { formatDate } from "@/utils/common";
 import { useRouter } from "next/navigation";
 
-const QuestionsByCategory = ({ categoryId }) => {
+const QuestionsByCategory = ({ categoryId, reviewMode }) => {
   const [params, setParams] = useState({
     page: 1,
   });
@@ -28,6 +30,7 @@ const QuestionsByCategory = ({ categoryId }) => {
     params: {
       ...params,
       categoryId,
+      reviewMode: reviewMode ? "Reviewed" : "UnderReview",
     },
   });
   const router = useRouter();
@@ -90,28 +93,45 @@ const Page = () => {
   const { data } = useSWR({ url: "/Category" });
 
   const [expanded, setExpanded] = useState(null);
+  const [reviewMode, setReviewMode] = useState(false);
+
+  const handleChange = (event) => {
+    setReviewMode(event.target.checked);
+  };
 
   return (
-    <div className="w-full">
-      {(data ?? []).map((datum) => (
-        <Accordion
-          key={datum.id}
-          expanded={expanded === datum.id}
-          onChange={() => setExpanded(expanded === datum.id ? null : datum.id)}
-        >
-          <AccordionSummary expandIcon={<ExpandMore />}>
-            <Typography sx={{ width: "33%", flexShrink: 0 }}>
-              {datum.name}
-            </Typography>
-          </AccordionSummary>
-          <AccordionDetails>
-            {expanded === datum.id && (
-              <QuestionsByCategory {...{ categoryId: expanded }} />
-            )}
-          </AccordionDetails>
-        </Accordion>
-      ))}
-    </div>
+    <>
+      <FormControlLabel
+        checked={reviewMode}
+        control={<Switch />}
+        label={reviewMode ? "Reviewed" : "Under Review"}
+        onChange={handleChange}
+      />
+      <div className="w-full">
+        {(data ?? []).map((datum) => (
+          <Accordion
+            key={datum.id}
+            expanded={expanded === datum.id}
+            onChange={() =>
+              setExpanded(expanded === datum.id ? null : datum.id)
+            }
+          >
+            <AccordionSummary expandIcon={<ExpandMore />}>
+              <Typography sx={{ width: "33%", flexShrink: 0 }}>
+                {datum.name}
+              </Typography>
+            </AccordionSummary>
+            <AccordionDetails>
+              {expanded === datum.id && (
+                <QuestionsByCategory
+                  {...{ categoryId: expanded, reviewMode }}
+                />
+              )}
+            </AccordionDetails>
+          </Accordion>
+        ))}
+      </div>
+    </>
   );
 };
 
