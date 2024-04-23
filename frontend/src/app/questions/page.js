@@ -172,6 +172,7 @@ const Questions = () => {
               <TableCell>ID</TableCell>
               <TableCell>Title</TableCell>
               <TableCell align="center">Type</TableCell>
+              <TableCell align="center">Added to Question Bank</TableCell>
               <TableCell align="center">Category</TableCell>
               <TableCell align="center">Created by</TableCell>
               <TableCell>Created at</TableCell>
@@ -182,15 +183,22 @@ const Questions = () => {
             {(data?.data ?? []).map((datum) => (
               <TableRow key={datum.id}>
                 <TableCell>{datum.id}</TableCell>
-                <TableCell>{datum.title}</TableCell>
+                <TableCell className="text-wrap w-96">{datum.title}</TableCell>
                 <TableCell align="center">{datum.questionType}</TableCell>
+                <TableCell align="center">
+                  {datum.isAddedToQuestionBank === null
+                    ? "Pending"
+                    : datum.isAddedToQuestionBank
+                      ? "Yes"
+                      : "No"}
+                </TableCell>
                 <TableCell align="center">{datum.category.name}</TableCell>
                 <TableCell align="center">
                   {datum.createdBy?.fullName}
                 </TableCell>
                 <TableCell>{formatDate(datum.createdAt)}</TableCell>
 
-                <TableCell className="flex gap-2 justify-center items-center">
+                <TableCell>
                   <Button
                     startIcon={<Delete />}
                     disabled={datum?.isAddedToQuestionBank != null}
