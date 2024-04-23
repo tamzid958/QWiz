@@ -12,15 +12,15 @@ namespace QWiz.Controllers;
 [ApiController]
 [Consumes("application/json")]
 [Produces("application/json")]
-[EnableCors("AllowOrigin")]
 [Authorize]
+[EnableCors("AllowOrigin")]
 public class CategoryController(CategoryService categoryService) : ControllerBase
 {
     [HttpGet]
     [ProducesResponseType(typeof(List<Category>), StatusCodes.Status200OK)]
     public IActionResult Get()
     {
-        return Ok(categoryService.Get(Request));
+        return Ok(categoryService.Get());
     }
 
     [HttpGet("{id:int}")]
@@ -31,6 +31,7 @@ public class CategoryController(CategoryService categoryService) : ControllerBas
         return Ok(categoryService.GetById(id));
     }
 
+    [Authorize(Roles = "Admin")]
     [HttpPost]
     [ProducesResponseType(typeof(Category), StatusCodes.Status201Created)]
     [ProducesResponseType(typeof(ExceptionMessage), StatusCodes.Status400BadRequest)]
@@ -41,6 +42,7 @@ public class CategoryController(CategoryService categoryService) : ControllerBas
         return Created(Request.Path.Value!, categoryService.Create(categoryWithReviewer));
     }
 
+    [Authorize(Roles = "Admin")]
     [HttpPut("{id:int}")]
     [ProducesResponseType(typeof(Category), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(ExceptionMessage), StatusCodes.Status400BadRequest)]
@@ -51,6 +53,7 @@ public class CategoryController(CategoryService categoryService) : ControllerBas
         return Ok(categoryService.Update(id, categoryWithReviewer));
     }
 
+    [Authorize(Roles = "Admin")]
     [HttpDelete("{id:int}")]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     [ProducesResponseType(typeof(ExceptionMessage), StatusCodes.Status404NotFound)]

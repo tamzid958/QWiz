@@ -10,6 +10,6 @@ public class CategoryWithReviewer
 
     public class ReviewerDto
     {
-        [MinLength(1)] public required List<string> AppUserNames { set; get; }
+        [MinLength(1)] [MaxLength(10)] public required List<string> AppUserNames { set; get; }
     }
 }

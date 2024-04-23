@@ -128,4 +128,16 @@ public class AuthenticationService(
 
         throw new UnauthorizedAccessException("User not authenticated or identity not found");
     }
+
+    public AppUser CurrentUserInWhichRole(out bool isAdmin, out bool isReviewer, out bool isQuestionSetter)
+    {
+        var currentUser = GetCurrentUser();
+
+        var roles = GetRolesByUserId(currentUser.Id).Result;
+
+        isAdmin = roles.Contains("Admin");
+        isReviewer = roles.Contains("Reviewer");
+        isQuestionSetter = roles.Contains("QuestionSetter");
+        return currentUser;
+    }
 }

@@ -13,5 +13,5 @@ public class AppUserDto
 
     [Required] [PasswordPropertyText] public string Password { get; set; } = null!;
 
-    [Required] public List<Role> Roles { get; set; } = [Role.QuestionSetter];
+    [Required] public List<Role> Roles { get; set; } = null!;
 }

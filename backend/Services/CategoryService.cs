@@ -1,15 +1,28 @@
 ﻿using QWiz.Entities;
+using QWiz.Helpers.Authentication;
 using QWiz.Helpers.EntityMapper.DTOs;
+using QWiz.Helpers.Paginator;
 using QWiz.Repositories.Wrapper;
 
 namespace QWiz.Services;
 
 public class CategoryService(
-    IRepositoryWrapper repositoryWrapper)
+    IRepositoryWrapper repositoryWrapper,
+    AuthenticationService authenticationService
+)
 {
-    public List<Category> Get(HttpRequest request)
+    public List<Category> Get()
     {
+        var currentUser = authenticationService.CurrentUserInWhichRole(
+            out _,
+            out var isReviewer,
+            out _
+        );
+
         return repositoryWrapper.Category.GetAll(
+            category => !isReviewer || category.Reviewers.Any(reviewer => reviewer.AppUserId == currentUser.Id),
+            "id",
+            Order.Asc,
             category => category.Reviewers.Select(x => x.AppUser),
             category => category.CreatedBy!
         );

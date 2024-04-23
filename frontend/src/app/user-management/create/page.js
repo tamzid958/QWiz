@@ -2,7 +2,7 @@
 
 import {
   FormContainer,
-  MultiSelectElement,
+  SelectElement,
   TextFieldElement,
 } from "react-hook-form-mui";
 import { Typography } from "@mui/material";
@@ -31,12 +31,15 @@ const Page = () => {
             await requestApi({
               method: "POST",
               url: "/Authentication/Register",
-              data,
+              data: {
+                ...data,
+                roles: [data.roles],
+              },
             }).then(({ error }) => {
               error
                 ? toast.error("User Creation Failed")
-                : toast.success("User Created Successfully"),
-                !error && router.back();
+                : toast.success("User Created Successfully");
+              !error && router.back();
             });
           }}
         >
@@ -72,10 +75,13 @@ const Page = () => {
               fullWidth
               autoComplete="off"
             />
-            <MultiSelectElement
+            <SelectElement
               label="Roles"
               name="roles"
-              options={["QuestionSetter", "Reviewer", "Admin"]}
+              options={["QuestionSetter", "Reviewer", "Admin"].map((o) => ({
+                label: o,
+                id: o,
+              }))}
               showChips
               showCheckbox
               fullWidth

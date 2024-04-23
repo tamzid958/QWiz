@@ -24,6 +24,7 @@ public class ReviewLogController(ReviewerLogService reviewerLogService) : Contro
         return Ok(reviewerLogService.Get(Request, reviewLogQueries));
     }
 
+    [Authorize(Roles = "Reviewer,Admin")]
     [HttpPost]
     [ProducesResponseType(typeof(ReviewLog), StatusCodes.Status201Created)]
     [ProducesResponseType(typeof(ExceptionMessage), StatusCodes.Status400BadRequest)]

@@ -95,7 +95,7 @@ const Confirmation = ({
   );
 };
 
-const createReviewersWithLog = (reviewers, reviewLogs) => {
+export const createReviewersWithLog = (reviewers, reviewLogs) => {
   return reviewers && reviewLogs
     ? reviewers.map((o) => ({
         id: o.id,
@@ -159,7 +159,7 @@ const Page = () => {
         <div className="max-h-96 overflow-auto text-sm">
           {htmlToReactParser.parse(data.description)}
         </div>
-        {reviewerWithLog.find((o) => o.appUserId === userData.user.id).log ===
+        {reviewerWithLog.find((o) => o.appUserId === userData.user.id)?.log ===
           null && (
           <div className="flex gap-2 mt-5">
             <Button
@@ -209,7 +209,7 @@ const Page = () => {
                   optional={
                     <Typography variant="caption">
                       {reviewer.log === null
-                        ? "not reviewed yet"
+                        ? "time will be shown"
                         : formatDate(reviewer.log.createdAt)}
                     </Typography>
                   }

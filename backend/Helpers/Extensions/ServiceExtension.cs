@@ -14,5 +14,6 @@ public static class ServiceExtension
         service.AddScoped<QuestionService>();
         service.AddScoped<ReviewerService>();
         service.AddScoped<ReviewerLogService>();
+        service.AddScoped<AnalyticsService>();
     }
 }

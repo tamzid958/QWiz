@@ -14,7 +14,7 @@ namespace QWiz.Controllers;
 [ApiController]
 [Consumes("application/json")]
 [Produces("application/json")]
-[Authorize]
+[Authorize(Roles = "Admin")]
 [EnableCors("AllowOrigin")]
 public class AppUserController(AppUserService appUserService) : ControllerBase
 {

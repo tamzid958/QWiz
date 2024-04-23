@@ -24,13 +24,13 @@ const navigationLinks = [
     title: "Question",
     icon: <QuestionAnswer />,
     url: "/questions",
-    access: ["QuestionSetter"],
+    access: ["QuestionSetter", "Admin"],
   },
   {
     title: "Review",
     icon: <ReviewsSharp />,
     url: "/reviews",
-    access: ["Reviewer"],
+    access: ["Reviewer", "Admin"],
   },
   {
     title: "Category",

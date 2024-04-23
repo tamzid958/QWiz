@@ -56,6 +56,18 @@ public class ReviewerLogService(
     public ReviewLog Update(long id, ReviewLogDto reviewLog)
     {
         reviewLog.Id = id;
+
+        var currentUser = authenticationService.CurrentUserInWhichRole(
+            out _,
+            out var isReviewer,
+            out var _
+        );
+
+        if (!isReviewer) return repositoryWrapper.ReviewLog.Update(mapper.Map<ReviewLog>(reviewLog));
+
+        var prevReviewLog = repositoryWrapper.ReviewLog.GetById(id);
+        if (prevReviewLog.CreatedBy != currentUser) throw new UnauthorizedAccessException();
+
         return repositoryWrapper.ReviewLog.Update(mapper.Map<ReviewLog>(reviewLog));
     }
 }

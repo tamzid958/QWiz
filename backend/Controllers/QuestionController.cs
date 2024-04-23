@@ -22,7 +22,7 @@ public class QuestionController(QuestionService questionService) : ControllerBas
     [ProducesResponseType(typeof(List<string>), StatusCodes.Status200OK)]
     public IActionResult GetTypes()
     {
-        return Ok(questionService.GetTypes());
+        return Ok(QuestionService.GetTypes());
     }
 
     [HttpGet]
@@ -40,6 +40,7 @@ public class QuestionController(QuestionService questionService) : ControllerBas
         return Ok(questionService.GetById(id));
     }
 
+    [Authorize(Roles = "QuestionSetter,Admin")]
     [HttpPost]
     [ProducesResponseType(typeof(Question), StatusCodes.Status201Created)]
     [ProducesResponseType(typeof(ExceptionMessage), StatusCodes.Status400BadRequest)]
@@ -48,6 +49,7 @@ public class QuestionController(QuestionService questionService) : ControllerBas
         return Created(Request.Path.Value!, questionService.Create(question));
     }
 
+    [Authorize(Roles = "QuestionSetter,Admin")]
     [HttpPatch("{id:long}")]
     [ProducesResponseType(typeof(Question), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(ExceptionMessage), StatusCodes.Status400BadRequest)]
@@ -56,6 +58,7 @@ public class QuestionController(QuestionService questionService) : ControllerBas
         return Ok(questionService.Update(id, question));
     }
 
+    [Authorize(Roles = "Admin")]
     [HttpPatch("AddToBank/{id:long}")]
     [ProducesResponseType(typeof(Question), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(ExceptionMessage), StatusCodes.Status400BadRequest)]
@@ -64,6 +67,7 @@ public class QuestionController(QuestionService questionService) : ControllerBas
         return Ok(questionService.AddToQuestionBank(id));
     }
 
+    [Authorize(Roles = "QuestionSetter,Admin")]
     [HttpDelete("{id:long}")]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     [ProducesResponseType(typeof(ExceptionMessage), StatusCodes.Status404NotFound)]
