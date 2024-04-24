@@ -123,5 +123,6 @@ app.UseMiddleware<HttpContextMiddleware>();
 
 app.MapControllers();
 
+app.EnsureMigration();
 
 app.Run();
