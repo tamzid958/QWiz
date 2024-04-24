@@ -1,7 +1,7 @@
 "use client";
 import * as React from "react";
 import { useState } from "react";
-import { styled, useTheme } from "@mui/material/styles";
+import { styled } from "@mui/material/styles";
 import Box from "@mui/material/Box";
 import Drawer from "@mui/material/Drawer";
 import MuiAppBar from "@mui/material/AppBar";
@@ -85,7 +85,6 @@ const DrawerHeader = styled("div")(({ theme }) => ({
 }));
 
 const Layout = ({ children }) => {
-  const theme = useTheme();
   const [openDrawer, setOpenDrawerDrawer] = useState(false);
 
   const pathname = usePathname();
@@ -173,9 +172,7 @@ const Layout = ({ children }) => {
         <List>
           {navigationLinks
             .filter(
-              (o) =>
-                _.intersection(o.access, roles).length > 0 &&
-                o.hidden === false,
+              (o) => _.intersection(o.access, roles).length > 0 && !o.hidden,
             )
             .map((o) => (
               <ListItem
@@ -198,7 +195,7 @@ const Layout = ({ children }) => {
       </Drawer>
       <Main
         open={openDrawer}
-        className="h-screen bg-gradient-to-br from-gray-100 to-gray-300"
+        className="h-screen overflow-y-scroll bg-gradient-to-br from-gray-100 to-gray-300"
       >
         <DrawerHeader />
         <ToastContainer />
