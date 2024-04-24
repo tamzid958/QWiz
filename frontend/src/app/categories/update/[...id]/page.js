@@ -60,7 +60,7 @@ const Page = () => {
               url: `/Category/${queryParams.id}`,
               data: {
                 name: data.name,
-                reviewers: {
+                reviewer: {
                   appUserNames: data.reviewers,
                 },
               },

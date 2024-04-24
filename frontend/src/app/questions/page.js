@@ -7,41 +7,25 @@ import {
   DialogContent,
   DialogContentText,
   DialogTitle,
-  Step,
-  StepContent,
-  StepLabel,
-  Stepper,
   Table,
   TableBody,
   TableCell,
   TableHead,
   TablePagination,
   TableRow,
-  Typography,
 } from "@mui/material";
 import useSWR from "swr";
-import {
-  Add,
-  Check,
-  Delete,
-  Edit,
-  PanTool,
-  Reviews,
-} from "@mui/icons-material";
+import { Add, Delete, Edit, Reviews } from "@mui/icons-material";
 import { useRouter } from "next/navigation";
 import DeleteConfirm from "@/components/DeleteConfirmation";
 import { useState } from "react";
 import { requestApi } from "@/utils/axios.settings";
 import { toast } from "react-toastify";
-import { formatDate, sortByBooleanProperty } from "@/utils/common";
+import { createReviewersWithLog, formatDate } from "@/utils/common";
 import { DialogBody } from "next/dist/client/components/react-dev-overlay/internal/components/Dialog";
-import { Cancel } from "axios";
-import Box from "@mui/material/Box";
-import { createReviewersWithLog } from "@/app/reviews/view/[...id]/page";
+import ReviewLog from "@/components/ReviewLog";
 
 const CheckReview = ({ questionId, categoryId, open = false, handleClose }) => {
-  const [activeStep, setActiveStep] = useState(null);
-
   const { data: reviewerData } = useSWR(
     categoryId
       ? {
@@ -84,51 +68,7 @@ const CheckReview = ({ questionId, categoryId, open = false, handleClose }) => {
         </DialogContentText>
 
         <DialogBody className="mt-4">
-          <Stepper nonLinear orientation="vertical" activeStep={activeStep}>
-            {sortByBooleanProperty(
-              reviewerWithLog,
-              "review.log.isApproved",
-            ).map((reviewer, index) => (
-              <Step key={reviewer.id}>
-                <StepLabel
-                  onClick={() => setActiveStep(index)}
-                  StepIconComponent={
-                    reviewer.log === null
-                      ? PanTool
-                      : reviewer.log.isApproved
-                        ? Check
-                        : Cancel
-                  }
-                  StepIconProps={{
-                    className: `w-6 h-6 p-0.5 rounded-full ${
-                      reviewer.log === null
-                        ? "bg-yellow-500"
-                        : reviewer.log.isApproved
-                          ? "bg-green-500"
-                          : "bg-red-800"
-                    } text-white cursor-pointer`,
-                  }}
-                  optional={
-                    <Typography variant="caption">
-                      {reviewer.log === null
-                        ? "time will be shown"
-                        : formatDate(reviewer.log.createdAt)}
-                    </Typography>
-                  }
-                >
-                  {reviewer.fullName}
-                </StepLabel>
-                <StepContent>
-                  <Typography>
-                    {reviewer.log === null
-                      ? "review is still in pending"
-                      : reviewer.log.comment}
-                  </Typography>
-                  <Box sx={{ mb: 2 }}></Box>
-                </StepContent>
-              </Step>
-            ))}
-          </Stepper>
+          <ReviewLog reviewerWithLog={reviewerWithLog} />
         </DialogBody>
       </DialogContent>
       <DialogActions>

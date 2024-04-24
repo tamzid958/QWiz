@@ -3,6 +3,7 @@ using QWiz.Entities;
 using QWiz.Helpers.Authentication;
 using QWiz.Helpers.EntityMapper.DTOs;
 using QWiz.Helpers.HttpQueries;
+using QWiz.Helpers.Paginator;
 using QWiz.Repositories.Wrapper;
 
 namespace QWiz.Services;
@@ -13,10 +14,13 @@ public class ReviewerLogService(
     IMapper mapper
 )
 {
-    public List<ReviewLog> Get(HttpRequest request, ReviewLogQueries reviewLogQueries)
+    public List<ReviewLog> Get(ReviewLogQueries reviewLogQueries)
     {
         return repositoryWrapper.ReviewLog.GetAll(
-            log => log.QuestionId == reviewLogQueries.QuestionId
+            log => log.QuestionId == reviewLogQueries.QuestionId,
+            "id",
+            Order.Asc,
+            log => log.CreatedBy!
         );
     }
 
@@ -55,7 +59,7 @@ public class ReviewerLogService(
         var currentUser = authenticationService.CurrentUserInWhichRole(
             out _,
             out var isReviewer,
-            out var _
+            out _
         );
 
         if (!isReviewer) return repositoryWrapper.ReviewLog.Update(mapper.Map<ReviewLog>(reviewLog));

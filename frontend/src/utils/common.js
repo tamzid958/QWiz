@@ -1,5 +1,6 @@
 import _ from "lodash";
 import dateFormat from "dateformat";
+import navigationLinks from "@/utils/navigation.link";
 
 const getLettersFromString = (str) => {
   const parts = str.split(" "); // Split the full name into parts by space
@@ -130,10 +131,48 @@ function sortByBooleanProperty(objects, propertyName) {
   });
 }
 
+const createReviewersWithLog = (reviewers, reviewLogs) => {
+  if (reviewers?.length === 0 && reviewLogs?.length > 0) {
+    return sortByBooleanProperty(
+      reviewLogs.map((o) => ({
+        id: o.id,
+        appUserId: o.createdById,
+        fullName: o.createdBy.fullName,
+        log: o,
+      })),
+      "review.log.isApproved",
+    );
+  }
+
+  return reviewers && reviewLogs
+    ? sortByBooleanProperty(
+        reviewers.map((o) => ({
+          id: o.id,
+          appUserId: o.appUserId,
+          fullName: o.appUser.fullName,
+          log: reviewLogs.find((x) => x.createdById === o.appUserId) ?? null,
+        })),
+        "review.log.isApproved",
+      )
+    : [];
+};
+
+const checkAccess = (pathname, userRoles) => {
+  // Check if any navigation link's access array includes any of the user roles
+  return (
+    _.intersection(
+      navigationLinks.find((o) => o.url.startsWith(pathname)).access,
+      userRoles,
+    ).length > 0
+  );
+};
+
 export {
   getLettersFromString,
   textToDarkLightColor,
   breadCrumbGenerator,
   formatDate,
   sortByBooleanProperty,
+  createReviewersWithLog,
+  checkAccess,
 };

@@ -80,7 +80,6 @@ const Category = () => {
                       router.push(`/categories/update/${datum.id}`)
                     }
                     variant="conatined"
-                    disabled={datum.name === "Uncategorized"}
                   >
                     Edit
                   </Button>

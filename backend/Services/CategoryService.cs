@@ -1,4 +1,5 @@
-﻿using QWiz.Entities;
+﻿using System.Data;
+using QWiz.Entities;
 using QWiz.Helpers.Authentication;
 using QWiz.Helpers.EntityMapper.DTOs;
 using QWiz.Helpers.Paginator;
@@ -54,7 +55,7 @@ public class CategoryService(
 
         UpdateMultiple(category, categoryWithReviewer.Reviewer.AppUserNames);
 
-        return category;
+        return repositoryWrapper.Category.Update(category);
     }
 
     private Category CreateUnCategorized()
@@ -74,6 +75,9 @@ public class CategoryService(
 
     public void Delete(int id)
     {
+        var category = repositoryWrapper.Category.GetById(id);
+        if (category.Name == "Uncategorized") throw new DataException();
+
         MoveToUncategorized(id);
         DeleteByCategory(id);
         repositoryWrapper.Category.Delete(id);

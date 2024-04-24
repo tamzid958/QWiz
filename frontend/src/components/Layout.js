@@ -172,7 +172,11 @@ const Layout = ({ children }) => {
         <Divider />
         <List>
           {navigationLinks
-            .filter((o) => _.intersection(o.access, roles).length > 0)
+            .filter(
+              (o) =>
+                _.intersection(o.access, roles).length > 0 &&
+                o.hidden === false,
+            )
             .map((o) => (
               <ListItem
                 key={o.title}

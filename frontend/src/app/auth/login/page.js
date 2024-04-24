@@ -8,11 +8,13 @@ import { signIn } from "next-auth/react";
 import { LoadingButton } from "@mui/lab";
 import { useState } from "react";
 import { toast, ToastContainer } from "react-toastify";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 
 const Page = () => {
   const [loading, setLoading] = useState(false);
   const router = useRouter();
+  const searchParams = useSearchParams();
+
   return (
     <div className="h-screen flex items-center justify-center bg-gradient-to-br from-black to-gray-900">
       <ToastContainer />
@@ -35,6 +37,8 @@ const Page = () => {
             await signIn("credentials", {
               username: data.username,
               password: data.password,
+              redirect: true,
+              callbackUrl: searchParams.get("callbackUrl") ?? "/",
             })
               .then(() => {
                 router.push("/dashboard");

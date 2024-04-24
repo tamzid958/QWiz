@@ -21,7 +21,7 @@ public class ReviewLogController(ReviewerLogService reviewerLogService) : Contro
     [ProducesResponseType(typeof(List<ReviewLog>), StatusCodes.Status200OK)]
     public IActionResult Get([FromQuery] ReviewLogQueries reviewLogQueries)
     {
-        return Ok(reviewerLogService.Get(Request, reviewLogQueries));
+        return Ok(reviewerLogService.Get(reviewLogQueries));
     }
 
     [Authorize(Roles = "Reviewer,Admin")]

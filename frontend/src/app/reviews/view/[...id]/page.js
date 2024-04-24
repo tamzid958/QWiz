@@ -5,15 +5,12 @@ import useSWR from "swr";
 import Loader from "@/components/Loader";
 import {
   Button,
+  Card,
   Dialog,
   DialogActions,
   DialogContent,
   DialogContentText,
   DialogTitle,
-  Step,
-  StepContent,
-  StepLabel,
-  Stepper,
   TextField,
   Typography,
 } from "@mui/material";
@@ -21,11 +18,9 @@ import { Parser as HtmlToReactParser } from "html-to-react";
 import { useState } from "react";
 import { requestApi } from "@/utils/axios.settings";
 import { toast } from "react-toastify";
-import Box from "@mui/material/Box";
-import { formatDate, sortByBooleanProperty } from "@/utils/common";
-import { Check, PanTool } from "@mui/icons-material";
-import { Cancel } from "axios";
+import { createReviewersWithLog } from "@/utils/common";
 import { useSession } from "next-auth/react";
+import ReviewLog from "@/components/ReviewLog";
 
 const Confirmation = ({
   approved,
@@ -95,24 +90,12 @@ const Confirmation = ({
   );
 };
 
-export const createReviewersWithLog = (reviewers, reviewLogs) => {
-  return reviewers && reviewLogs
-    ? reviewers.map((o) => ({
-        id: o.id,
-        appUserId: o.appUserId,
-        fullName: o.appUser.fullName,
-        log: reviewLogs.find((x) => x.createdById === o.appUserId) ?? null,
-      }))
-    : [];
-};
-
 const Page = () => {
   const params = useParams();
   const { data, mutate } = useSWR({ url: `/Question/${params.id}` });
   const htmlToReactParser = new HtmlToReactParser();
   const [approved, setApproved] = useState(false);
   const [dialogOpen, setDialogOpen] = useState(false);
-  const [activeStep, setActiveStep] = useState(null);
   const { data: userData } = useSession();
   const { data: reviewerData } = useSWR(
     data
@@ -149,7 +132,7 @@ const Page = () => {
     </div>
   ) : (
     <div className="w-full flex justify-between gap-4">
-      <div className="flex flex-col gap-0.5 w-1/2 border-2 rounded p-2 border-gray-300">
+      <Card className="flex flex-col gap-0.5 w-1/2 p-4 bg-gray-50">
         <Typography variant="h4" gutterBottom>
           <span className="font-bold">Question:</span> {data.title}
         </Typography>
@@ -178,57 +161,14 @@ const Page = () => {
             </Button>
           </div>
         )}
-      </div>
-      <div className="w-1/2 border-2 border-gray-300 p-2 rounded">
+      </Card>
+      <Card className="w-1/2 p-4 bg-gray-50">
         <Typography variant="h4" gutterBottom className="mb-2">
           Reviews
         </Typography>
 
-        <Stepper nonLinear orientation="vertical" activeStep={activeStep}>
-          {sortByBooleanProperty(reviewerWithLog, "review.log.isApproved").map(
-            (reviewer, index) => (
-              <Step key={reviewer.id}>
-                <StepLabel
-                  onClick={() => setActiveStep(index)}
-                  StepIconComponent={
-                    reviewer.log === null
-                      ? PanTool
-                      : reviewer.log.isApproved
-                        ? Check
-                        : Cancel
-                  }
-                  StepIconProps={{
-                    className: `w-6 h-6 p-0.5 rounded-full ${
-                      reviewer.log === null
-                        ? "bg-yellow-500"
-                        : reviewer.log.isApproved
-                          ? "bg-green-500"
-                          : "bg-red-800"
-                    } text-white cursor-pointer`,
-                  }}
-                  optional={
-                    <Typography variant="caption">
-                      {reviewer.log === null
-                        ? "time will be shown"
-                        : formatDate(reviewer.log.createdAt)}
-                    </Typography>
-                  }
-                >
-                  {reviewer.fullName}
-                </StepLabel>
-                <StepContent>
-                  <Typography>
-                    {reviewer.log === null
-                      ? "review is still in pending"
-                      : reviewer.log.comment}
-                  </Typography>
-                  <Box sx={{ mb: 2 }}></Box>
-                </StepContent>
-              </Step>
-            ),
-          )}
-        </Stepper>
-      </div>
+        <ReviewLog reviewerWithLog={reviewerWithLog} />
+      </Card>
       <Confirmation
         {...{
           open: dialogOpen,
