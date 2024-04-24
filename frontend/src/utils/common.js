@@ -161,7 +161,7 @@ const checkAccess = (pathname, userRoles) => {
   // Check if any navigation link's access array includes any of the user roles
   return (
     _.intersection(
-      navigationLinks.find((o) => o.url.startsWith(pathname)).access,
+      navigationLinks.find((o) => pathname.startsWith(o.url)).access,
       userRoles,
     ).length > 0
   );
