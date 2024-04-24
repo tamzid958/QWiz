@@ -14,4 +14,6 @@ public class AppUser : IdentityUser
 
 
     [JsonIgnore] public override string? PasswordHash { get; set; } = null!;
+
+    public virtual ICollection<ApplicationUserRole> UserRoles { get; } = new List<ApplicationUserRole>();
 }

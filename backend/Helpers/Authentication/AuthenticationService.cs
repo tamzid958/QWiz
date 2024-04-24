@@ -20,9 +20,11 @@ public class AuthenticationService(
     {
         try
         {
-            var user = await userManager.FindByNameAsync(loginDto.Username) ??
-                       await userManager.FindByEmailAsync(loginDto.Username) ??
-                       repositoryWrapper.AppUser.GetFirstBy(o => o.PhoneNumber == loginDto.Username);
+            var user = repositoryWrapper
+                .AppUser
+                .GetFirstBy(o => o.UserName == loginDto.Username,
+                    o => o.UserRoles.Select(x => x.Role)
+                );
 
             if (!await userManager.CheckPasswordAsync(user, loginDto.Password))
                 throw new UnauthorizedAccessException("invalid email and password");
@@ -48,15 +50,12 @@ public class AuthenticationService(
                 signingCredentials: new SigningCredentials(authSigningKey, SecurityAlgorithms.HmacSha256)
             );
 
-            var roles = (await userManager.GetRolesAsync(user)).ToList();
-
-
             return new AuthClaim
             {
                 Token = new JwtSecurityTokenHandler().WriteToken(token),
                 Expiration = token.ValidTo,
                 AppUser = user,
-                Roles = roles
+                Roles = user.UserRoles.Select(o => o.Role.Name).ToList()!
             };
         }
         catch (System.Exception e)

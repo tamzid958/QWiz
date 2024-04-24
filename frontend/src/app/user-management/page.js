@@ -2,6 +2,7 @@
 
 import {
   Button,
+  Chip,
   Table,
   TableBody,
   TableCell,
@@ -38,6 +39,7 @@ const UserManagement = () => {
               <TableCell>ID</TableCell>
               <TableCell>Username</TableCell>
               <TableCell>Full Name</TableCell>
+              <TableCell align="center">Role</TableCell>
               <TableCell>Email</TableCell>
               <TableCell>Phone Number</TableCell>
             </TableRow>
@@ -48,6 +50,11 @@ const UserManagement = () => {
                 <TableCell>{datum.id}</TableCell>
                 <TableCell>{datum.userName}</TableCell>
                 <TableCell>{datum.fullName}</TableCell>
+                <TableCell align="center">
+                  {datum.userRoles.map((roles, index) => (
+                    <Chip key={index} label={roles.role.name} />
+                  ))}
+                </TableCell>
                 <TableCell>{datum.email}</TableCell>
                 <TableCell>{datum.phoneNumber ?? "not available"}</TableCell>
               </TableRow>

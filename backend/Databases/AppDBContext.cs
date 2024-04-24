@@ -8,7 +8,9 @@ using QWiz.Entities.Enum;
 
 namespace QWiz.Databases;
 
-public class AppDbContext : IdentityDbContext<AppUser>
+public class AppDbContext : IdentityDbContext<AppUser, ApplicationRole, string, IdentityUserClaim<string>
+    , ApplicationUserRole, IdentityUserLogin<string>, IdentityRoleClaim<string>, IdentityUserToken<string>>
+
 {
     private readonly IDbConnection? _dbConnection;
 
@@ -40,29 +42,51 @@ public class AppDbContext : IdentityDbContext<AppUser>
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
-        SeedData(modelBuilder);
         base.OnModelCreating(modelBuilder);
+
+        modelBuilder.Entity<AppUser>()
+            .HasMany(e => e.UserRoles)
+            .WithOne()
+            .HasForeignKey(e => e.UserId)
+            .IsRequired()
+            .OnDelete(DeleteBehavior.Cascade);
+
+        modelBuilder.Entity<ApplicationUserRole>()
+            .HasOne(e => e.User)
+            .WithMany(e => e.UserRoles)
+            .HasForeignKey(e => e.UserId);
+
+        modelBuilder.Entity<ApplicationUserRole>()
+            .HasOne(e => e.Role)
+            .WithMany(e => e.UserRoles)
+            .HasForeignKey(e => e.RoleId);
+
+        SeedData(modelBuilder);
     }
 
     private static void SeedData(ModelBuilder builder)
     {
-        const string adminId = "02174cf0–9412–4cfe-afbf-59f706d72cf6";
-        const string roleId = "341743f0-asd2–42de-afbf-59kmkkmk72cf6";
+        var adminId = Guid.NewGuid().ToString();
+        var roleId = Guid.NewGuid().ToString();
 
-        builder.Entity<IdentityRole>().HasData(new IdentityRole
+        builder.Entity<ApplicationRole>().HasData(new ApplicationRole
         {
             Name = Role.Admin.ToString(),
             NormalizedName = Role.Admin.ToString().ToUpper(),
             Id = roleId,
             ConcurrencyStamp = roleId
-        }, new IdentityRole
+        }, new ApplicationRole
         {
             Name = Role.Reviewer.ToString(),
-            NormalizedName = Role.Reviewer.ToString().ToUpper()
-        }, new IdentityRole
+            NormalizedName = Role.Reviewer.ToString().ToUpper(),
+            Id = Guid.NewGuid().ToString(),
+            ConcurrencyStamp = Guid.NewGuid().ToString()
+        }, new ApplicationRole
         {
             Name = Role.QuestionSetter.ToString(),
-            NormalizedName = Role.QuestionSetter.ToString().ToUpper()
+            NormalizedName = Role.QuestionSetter.ToString().ToUpper(),
+            Id = Guid.NewGuid().ToString(),
+            ConcurrencyStamp = Guid.NewGuid().ToString()
         });
 
         var appUser = new AppUser
@@ -81,7 +105,7 @@ public class AppDbContext : IdentityDbContext<AppUser>
         //seed user
         builder.Entity<AppUser>().HasData(appUser);
 
-        builder.Entity<IdentityUserRole<string>>().HasData(new IdentityUserRole<string>
+        builder.Entity<ApplicationUserRole>().HasData(new ApplicationUserRole
         {
             RoleId = roleId,
             UserId = adminId

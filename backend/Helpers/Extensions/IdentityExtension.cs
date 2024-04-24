@@ -12,7 +12,7 @@ public static class IdentityExtension
 {
     public static void ConfigureIdentityUser(this IServiceCollection services)
     {
-        services.AddIdentity<AppUser, IdentityRole>(opt =>
+        services.AddIdentity<AppUser, ApplicationRole>(opt =>
             {
                 opt.Password.RequiredLength = 4;
                 opt.Password.RequireDigit = false;

@@ -15,6 +15,11 @@ export async function middleware(request, event) {
     return NextResponse.redirect(signInUrl, {
       status: 303,
     });
+  }
+  if (pathname === "/") {
+    return NextResponse.redirect(new URL(`/dashboard`, request.url), {
+      status: 303,
+    });
   } else if (checkAccess(pathname, roles)) {
     return response;
   } else {

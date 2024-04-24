@@ -12,8 +12,8 @@ using QWiz.Databases;
 namespace QWiz.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20240422193758_v1.0")]
-    partial class v10
+    [Migration("20240424220323_Initial")]
+    partial class Initial
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -24,54 +24,6 @@ namespace QWiz.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
-
-            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
-                {
-                    b.Property<string>("Id")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<string>("ConcurrencyStamp")
-                        .IsConcurrencyToken()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Name")
-                        .HasMaxLength(256)
-                        .HasColumnType("nvarchar(256)");
-
-                    b.Property<string>("NormalizedName")
-                        .HasMaxLength(256)
-                        .HasColumnType("nvarchar(256)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("NormalizedName")
-                        .IsUnique()
-                        .HasDatabaseName("RoleNameIndex")
-                        .HasFilter("[NormalizedName] IS NOT NULL");
-
-                    b.ToTable("AspNetRoles", (string)null);
-
-                    b.HasData(
-                        new
-                        {
-                            Id = "341743f0-asd2–42de-afbf-59kmkkmk72cf6",
-                            ConcurrencyStamp = "341743f0-asd2–42de-afbf-59kmkkmk72cf6",
-                            Name = "Admin",
-                            NormalizedName = "ADMIN"
-                        },
-                        new
-                        {
-                            Id = "c38e23fe-a8f1-4037-b603-63bf6c9ada95",
-                            Name = "Reviewer",
-                            NormalizedName = "REVIEWER"
-                        },
-                        new
-                        {
-                            Id = "82ffe765-fcce-4780-a139-55f354b8f924",
-                            Name = "QuestionSetter",
-                            NormalizedName = "QUESTIONSETTER"
-                        });
-                });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
                 {
@@ -143,28 +95,6 @@ namespace QWiz.Migrations
                     b.HasIndex("UserId");
 
                     b.ToTable("AspNetUserLogins", (string)null);
-                });
-
-            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserRole<string>", b =>
-                {
-                    b.Property<string>("UserId")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<string>("RoleId")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.HasKey("UserId", "RoleId");
-
-                    b.HasIndex("RoleId");
-
-                    b.ToTable("AspNetUserRoles", (string)null);
-
-                    b.HasData(
-                        new
-                        {
-                            UserId = "02174cf0–9412–4cfe-afbf-59f706d72cf6",
-                            RoleId = "341743f0-asd2–42de-afbf-59kmkkmk72cf6"
-                        });
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserToken<string>", b =>
@@ -260,19 +190,91 @@ namespace QWiz.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "02174cf0–9412–4cfe-afbf-59f706d72cf6",
+                            Id = "a2cbb976-2a83-49a0-8625-12261c934bc3",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "16af3765-98d3-41d6-b972-0fd81fb20c13",
+                            ConcurrencyStamp = "668e6ca8-8c7f-499c-8368-996ca1da99d3",
                             Email = "tamjidahmed958@gmail.com",
                             EmailConfirmed = true,
                             FullName = "Tamzid Ahmed",
                             LockoutEnabled = false,
                             NormalizedUserName = "TAMZID",
-                            PasswordHash = "AQAAAAIAAYagAAAAEKF5Hk4w6gR6vqaSuTNzOhg11Uten0eYbbU1cf0g7WSomOgG3+2Nr5d5L70JrTPmFw==",
+                            PasswordHash = "AQAAAAIAAYagAAAAEIbLNtaXtLXOg2/QRIuaNnydvlw1CN4GMj1XNjBTv4g78Fuf3Ot04UcMNYKgYcXv3w==",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "b653f1c0-91e1-448c-a4ca-dc7c6a1d319e",
+                            SecurityStamp = "eb7b3977-e5fa-4de4-9f0c-f9e6324ddf7f",
                             TwoFactorEnabled = false,
                             UserName = "tamzid"
+                        });
+                });
+
+            modelBuilder.Entity("QWiz.Entities.ApplicationRole", b =>
+                {
+                    b.Property<string>("Id")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("ConcurrencyStamp")
+                        .IsConcurrencyToken()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Name")
+                        .HasMaxLength(256)
+                        .HasColumnType("nvarchar(256)");
+
+                    b.Property<string>("NormalizedName")
+                        .HasMaxLength(256)
+                        .HasColumnType("nvarchar(256)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("NormalizedName")
+                        .IsUnique()
+                        .HasDatabaseName("RoleNameIndex")
+                        .HasFilter("[NormalizedName] IS NOT NULL");
+
+                    b.ToTable("AspNetRoles", (string)null);
+
+                    b.HasData(
+                        new
+                        {
+                            Id = "3c1ed711-6da2-40be-8565-542ebd354bbd",
+                            ConcurrencyStamp = "3c1ed711-6da2-40be-8565-542ebd354bbd",
+                            Name = "Admin",
+                            NormalizedName = "ADMIN"
+                        },
+                        new
+                        {
+                            Id = "9e37982f-e0b8-4def-9dd3-df21f16326a0",
+                            ConcurrencyStamp = "5a500dd9-bf0a-4c2e-b67e-b004fbee60d7",
+                            Name = "Reviewer",
+                            NormalizedName = "REVIEWER"
+                        },
+                        new
+                        {
+                            Id = "6ddcb72c-5efb-4505-ac20-0a28b33d29a7",
+                            ConcurrencyStamp = "67f672c2-7da0-404e-a05f-1fe4950402ec",
+                            Name = "QuestionSetter",
+                            NormalizedName = "QUESTIONSETTER"
+                        });
+                });
+
+            modelBuilder.Entity("QWiz.Entities.ApplicationUserRole", b =>
+                {
+                    b.Property<string>("UserId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("RoleId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("UserId", "RoleId");
+
+                    b.HasIndex("RoleId");
+
+                    b.ToTable("AspNetUserRoles", (string)null);
+
+                    b.HasData(
+                        new
+                        {
+                            UserId = "a2cbb976-2a83-49a0-8625-12261c934bc3",
+                            RoleId = "3c1ed711-6da2-40be-8565-542ebd354bbd"
                         });
                 });
 
@@ -429,7 +431,7 @@ namespace QWiz.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
                 {
-                    b.HasOne("Microsoft.AspNetCore.Identity.IdentityRole", null)
+                    b.HasOne("QWiz.Entities.ApplicationRole", null)
                         .WithMany()
                         .HasForeignKey("RoleId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -454,21 +456,6 @@ namespace QWiz.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserRole<string>", b =>
-                {
-                    b.HasOne("Microsoft.AspNetCore.Identity.IdentityRole", null)
-                        .WithMany()
-                        .HasForeignKey("RoleId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("QWiz.Entities.AppUser", null)
-                        .WithMany()
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
-
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserToken<string>", b =>
                 {
                     b.HasOne("QWiz.Entities.AppUser", null)
@@ -476,6 +463,25 @@ namespace QWiz.Migrations
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+                });
+
+            modelBuilder.Entity("QWiz.Entities.ApplicationUserRole", b =>
+                {
+                    b.HasOne("QWiz.Entities.ApplicationRole", "Role")
+                        .WithMany("UserRoles")
+                        .HasForeignKey("RoleId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("QWiz.Entities.AppUser", "User")
+                        .WithMany("UserRoles")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Role");
+
+                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("QWiz.Entities.Category", b =>
@@ -544,6 +550,16 @@ namespace QWiz.Migrations
                     b.Navigation("Category");
 
                     b.Navigation("CreatedBy");
+                });
+
+            modelBuilder.Entity("QWiz.Entities.AppUser", b =>
+                {
+                    b.Navigation("UserRoles");
+                });
+
+            modelBuilder.Entity("QWiz.Entities.ApplicationRole", b =>
+                {
+                    b.Navigation("UserRoles");
                 });
 
             modelBuilder.Entity("QWiz.Entities.Category", b =>

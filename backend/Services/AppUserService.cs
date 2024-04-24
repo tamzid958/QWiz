@@ -20,7 +20,11 @@ public class AppUserService(IRepositoryWrapper repositoryWrapper)
                 (string.IsNullOrEmpty(appUserQueries.PhoneNumber) ||
                  user.PhoneNumber!.StartsWith(appUserQueries.PhoneNumber)) &&
                 (string.IsNullOrEmpty(appUserQueries.Email) ||
-                 user.Email!.ToLower().StartsWith(appUserQueries.Email.ToLower()))
+                 user.Email!.ToLower().StartsWith(appUserQueries.Email.ToLower())) &&
+                (appUserQueries.Roles == null ||
+                 user.UserRoles.Any(ur => appUserQueries.Roles.Any(qr => ur.Role.Name == qr))
+                ),
+            o => o.UserRoles.Select(x => x.Role)
         );
     }
 

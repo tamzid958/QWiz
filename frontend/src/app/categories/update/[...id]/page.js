@@ -22,7 +22,7 @@ const Page = () => {
   const router = useRouter();
   const { data, isValidating, isLoading } = useSWR({
     url: "/AppUser",
-    params: { ...params, size: 100 },
+    params: { ...params, size: 100, roles: "Reviewer" },
   });
   const { data: prevData, mutate } = useSWR({
     url: `/Category/${queryParams.id}`,

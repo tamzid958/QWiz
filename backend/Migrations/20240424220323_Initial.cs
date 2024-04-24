@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace QWiz.Migrations
 {
     /// <inheritdoc />
-    public partial class v10 : Migration
+    public partial class Initial : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -280,20 +280,20 @@ namespace QWiz.Migrations
                 columns: new[] { "Id", "ConcurrencyStamp", "Name", "NormalizedName" },
                 values: new object[,]
                 {
-                    { "341743f0-asd2–42de-afbf-59kmkkmk72cf6", "341743f0-asd2–42de-afbf-59kmkkmk72cf6", "Admin", "ADMIN" },
-                    { "82ffe765-fcce-4780-a139-55f354b8f924", null, "QuestionSetter", "QUESTIONSETTER" },
-                    { "c38e23fe-a8f1-4037-b603-63bf6c9ada95", null, "Reviewer", "REVIEWER" }
+                    { "3c1ed711-6da2-40be-8565-542ebd354bbd", "3c1ed711-6da2-40be-8565-542ebd354bbd", "Admin", "ADMIN" },
+                    { "6ddcb72c-5efb-4505-ac20-0a28b33d29a7", "67f672c2-7da0-404e-a05f-1fe4950402ec", "QuestionSetter", "QUESTIONSETTER" },
+                    { "9e37982f-e0b8-4def-9dd3-df21f16326a0", "5a500dd9-bf0a-4c2e-b67e-b004fbee60d7", "Reviewer", "REVIEWER" }
                 });
 
             migrationBuilder.InsertData(
                 table: "AspNetUsers",
                 columns: new[] { "Id", "AccessFailedCount", "ConcurrencyStamp", "Email", "EmailConfirmed", "FullName", "LockoutEnabled", "LockoutEnd", "NormalizedEmail", "NormalizedUserName", "PasswordHash", "PhoneNumber", "PhoneNumberConfirmed", "SecurityStamp", "TwoFactorEnabled", "UserName" },
-                values: new object[] { "02174cf0–9412–4cfe-afbf-59f706d72cf6", 0, "16af3765-98d3-41d6-b972-0fd81fb20c13", "tamjidahmed958@gmail.com", true, "Tamzid Ahmed", false, null, null, "TAMZID", "AQAAAAIAAYagAAAAEKF5Hk4w6gR6vqaSuTNzOhg11Uten0eYbbU1cf0g7WSomOgG3+2Nr5d5L70JrTPmFw==", null, false, "b653f1c0-91e1-448c-a4ca-dc7c6a1d319e", false, "tamzid" });
+                values: new object[] { "a2cbb976-2a83-49a0-8625-12261c934bc3", 0, "668e6ca8-8c7f-499c-8368-996ca1da99d3", "tamjidahmed958@gmail.com", true, "Tamzid Ahmed", false, null, null, "TAMZID", "AQAAAAIAAYagAAAAEIbLNtaXtLXOg2/QRIuaNnydvlw1CN4GMj1XNjBTv4g78Fuf3Ot04UcMNYKgYcXv3w==", null, false, "eb7b3977-e5fa-4de4-9f0c-f9e6324ddf7f", false, "tamzid" });
 
             migrationBuilder.InsertData(
                 table: "AspNetUserRoles",
                 columns: new[] { "RoleId", "UserId" },
-                values: new object[] { "341743f0-asd2–42de-afbf-59kmkkmk72cf6", "02174cf0–9412–4cfe-afbf-59f706d72cf6" });
+                values: new object[] { "3c1ed711-6da2-40be-8565-542ebd354bbd", "a2cbb976-2a83-49a0-8625-12261c934bc3" });
 
             migrationBuilder.CreateIndex(
                 name: "IX_AspNetRoleClaims_RoleId",
