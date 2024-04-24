@@ -23,6 +23,8 @@ const QuestionsByCategory = ({ categoryId, reviewMode, mode }) => {
   const [params, setParams] = useState({
     page: 1,
   });
+  const router = useRouter();
+
   const { data } = useSWR({
     url: "/Question",
     params: {
@@ -41,7 +43,6 @@ const QuestionsByCategory = ({ categoryId, reviewMode, mode }) => {
         : {}),
     },
   });
-  const router = useRouter();
 
   useEffect(() => {
     if (categoryId) {
