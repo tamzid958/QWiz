@@ -6,17 +6,16 @@ import {
 } from "react-hook-form-mui";
 import { Typography } from "@mui/material";
 import { LoadingButton } from "@mui/lab";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useParams, useRouter } from "next/navigation";
 import { requestApi } from "@/utils/axios.settings";
 import { toast } from "react-toastify";
 import useSWR from "swr";
-import { CKEditor } from "@ckeditor/ckeditor5-react";
-import ClassicEditor from "@ckeditor/ckeditor5-build-classic";
 import _ from "lodash";
 import Loader from "@/components/Loader";
 
 const Page = () => {
+  const editorRef = useRef();
   const params = useParams();
   const { data } = useSWR({ url: "/Category" });
   const { data: questionType } = useSWR({ url: "/Question/Types" });
@@ -24,6 +23,16 @@ const Page = () => {
   const [loading, setLoading] = useState(false);
   const router = useRouter();
   const [description, setDescription] = useState("");
+  const [editorLoaded, setEditorLoaded] = useState(false);
+  const { CKEditor, ClassicEditor } = editorRef.current || {};
+
+  useEffect(() => {
+    editorRef.current = {
+      CKEditor: require("@ckeditor/ckeditor5-react").CKEditor, //Added .CKEditor
+      ClassicEditor: require("@ckeditor/ckeditor5-build-classic"),
+    };
+    setEditorLoaded(true);
+  }, []);
 
   useEffect(() => {
     if (prevData) {
@@ -86,24 +95,26 @@ const Page = () => {
             />
             <div className="w-full flex flex-col gap-1 h-60">
               <label>Description</label>
-              <CKEditor
-                editor={ClassicEditor}
-                config={{
-                  toolbar: [
-                    "bold",
-                    "italic",
-                    "bulletedList",
-                    "numberedList",
-                    "blockQuote",
-                    "link",
-                    "codeBlock",
-                  ],
-                }}
-                data={description}
-                onChange={(event, editor) => {
-                  setDescription(editor.getData());
-                }}
-              />
+              {editorLoaded && (
+                <CKEditor
+                  editor={ClassicEditor}
+                  config={{
+                    toolbar: [
+                      "bold",
+                      "italic",
+                      "bulletedList",
+                      "numberedList",
+                      "blockQuote",
+                      "link",
+                      "codeBlock",
+                    ],
+                  }}
+                  data={description}
+                  onChange={(event, editor) => {
+                    setDescription(editor.getData());
+                  }}
+                />
+              )}
             </div>
             <SelectElement
               label="Question Type"

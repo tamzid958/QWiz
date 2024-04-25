@@ -7,7 +7,7 @@ import {
   DialogTitle,
 } from "@mui/material";
 
-const LockConfirmation = ({ open = false, handleClose }) => {
+const LockConfirmation = ({ lockoutEnabled, open = false, handleClose }) => {
   return (
     <Dialog
       open={open}
@@ -17,11 +17,16 @@ const LockConfirmation = ({ open = false, handleClose }) => {
       aria-labelledby="alert-dialog-title"
       aria-describedby="alert-dialog-description"
     >
-      <DialogTitle id="alert-dialog-title">Confirm Block</DialogTitle>
+      <DialogTitle id="alert-dialog-title">
+        {lockoutEnabled ? "Confirm Unblock" : "Confirm Block"}
+      </DialogTitle>
       <DialogContent>
         <DialogContentText id="alert-dialog-description">
-          Double-check! Locking the user will cause the user to unable to login.
-          Are you absolutely sure?
+          {lockoutEnabled
+            ? `Double - check! Unlocking the user will cause the user to able to login again.
+            Are you absolutely sure?`
+            : `Double - check! Locking the user will cause the user to unable to login.
+            Are you absolutely sure?`}
         </DialogContentText>
       </DialogContent>
       <DialogActions>
@@ -32,7 +37,7 @@ const LockConfirmation = ({ open = false, handleClose }) => {
           variant="contained"
           className="bg-red-800 text-white hover:bg-red-900 hover:text-white"
         >
-          Lock
+          {lockoutEnabled ? "Unlock" : "Lock"}
         </Button>
       </DialogActions>
     </Dialog>

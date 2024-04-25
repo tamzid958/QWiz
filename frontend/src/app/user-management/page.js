@@ -30,6 +30,7 @@ const UserManagement = () => {
   const [lockDialog, setLockDialog] = useState({
     dialog: false,
     id: null,
+    lockoutEnabled: null,
   });
   const session = useSession();
 
@@ -78,6 +79,7 @@ const UserManagement = () => {
                       setLockDialog({
                         dialog: true,
                         id: datum.id,
+                        lockoutEnabled: datum.lockoutEnabled,
                       })
                     }
                   />
@@ -113,10 +115,12 @@ const UserManagement = () => {
       </div>
       <LockConfirmation
         open={lockDialog.dialog}
+        lockoutEnabled={lockDialog.lockoutEnabled}
         handleClose={async (confirmation) => {
           setLockDialog({
             dialog: false,
             id: null,
+            lockoutEnabled: null,
           });
           if (confirmation) {
             await requestApi({

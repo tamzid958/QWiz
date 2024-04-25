@@ -22,6 +22,10 @@ public static class IdentityExtension
                 opt.Password.RequireNonAlphanumeric = false;
                 opt.SignIn.RequireConfirmedAccount = false;
                 opt.User.RequireUniqueEmail = true;
+                opt.Lockout = new LockoutOptions
+                {
+                    AllowedForNewUsers = false
+                };
             })
             .AddEntityFrameworkStores<AppDbContext>()
             .AddDefaultTokenProviders();

@@ -1,6 +1,56 @@
 import { NextResponse } from "next/server";
 import { getToken } from "next-auth/jwt";
-import { checkAccess } from "@/utils/common";
+
+const protectedUrls = [
+  {
+    url: "/dashboard",
+    access: ["Admin", "Reviewer", "QuestionSetter"],
+  },
+  {
+    url: "/question-bank",
+    access: ["Admin"],
+  },
+  {
+    url: "/questions",
+    access: ["QuestionSetter", "Admin"],
+  },
+  {
+    url: "/reviews",
+    access: ["Reviewer", "Admin"],
+  },
+  {
+    url: "/categories",
+    access: ["Admin"],
+  },
+  {
+    url: "/user-management",
+    access: ["Admin"],
+  },
+  {
+    url: "/account",
+    access: ["Admin", "Reviewer", "QuestionSetter"],
+  },
+];
+
+const checkAccess = (pathname, userRoles) => {
+  // Find the navigation link whose URL matches the start of the pathname
+  const foundNavigationLink = protectedUrls.find((o) =>
+    pathname.startsWith(o.url),
+  );
+
+  // If no matching navigation link is found, return false
+  if (!foundNavigationLink) {
+    return false;
+  }
+
+  // Find the intersection of the found navigation link's access array and userRoles
+  const intersection = foundNavigationLink.access.filter((role) =>
+    userRoles.includes(role),
+  );
+
+  // Check if the intersection array contains any elements
+  return intersection.length > 0;
+};
 
 export async function middleware(request, event) {
   const response = NextResponse.next();

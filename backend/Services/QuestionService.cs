@@ -97,14 +97,18 @@ public class QuestionService(
     {
         question.Id = id;
         var currentUser = authenticationService.CurrentUserInWhichRole(
-            out _,
+            out var isAdmin,
             out _,
             out var isQuestionSetter
         );
 
-        var prevQuestion = repositoryWrapper.Question.GetById(id);
+        var prevQuestion = repositoryWrapper.Question.GetFirstBy(
+            ques => ques.Id == id,
+            ques => ques.ReviewLogs
+        );
 
-        if (isQuestionSetter && prevQuestion.CreatedBy != currentUser) throw new UnauthorizedAccessException();
+        if (!isAdmin || prevQuestion.CreatedById != currentUser.Id)
+            throw new UnauthorizedAccessException();
         if (prevQuestion.ReviewLogs.Count > 0) throw new DataException();
 
         return repositoryWrapper.Question.Update(mapper.Map<Question>(question));

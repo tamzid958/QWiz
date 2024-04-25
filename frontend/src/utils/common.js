@@ -1,6 +1,5 @@
 import _ from "lodash";
 import dateFormat from "dateformat";
-import navigationLinks from "@/utils/navigation.link";
 
 const getLettersFromString = (str) => {
   const parts = str.split(" "); // Split the full name into parts by space
@@ -157,22 +156,11 @@ const createReviewersWithLog = (reviewers, reviewLogs) => {
     : [];
 };
 
-const checkAccess = (pathname, userRoles) => {
-  // Check if any navigation link's access array includes any of the user roles
-  return (
-    _.intersection(
-      navigationLinks.find((o) => pathname.startsWith(o.url)).access,
-      userRoles,
-    ).length > 0
-  );
-};
-
 export {
   getLettersFromString,
   textToDarkLightColor,
   breadCrumbGenerator,
   formatDate,
   sortByBooleanProperty,
-  createReviewersWithLog,
-  checkAccess,
+  createReviewersWithLog
 };
