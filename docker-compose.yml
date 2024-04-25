@@ -1,0 +1,49 @@
+version: '3.7'
+
+networks:
+  qwiz_network:
+    driver: bridge
+  
+services:
+  sql_server:
+    image: mcr.microsoft.com/mssql/server:2022-preview-ubuntu-22.04
+    container_name: sql_server
+    environment:
+      - MSSQL_SA_PASSWORD=yourStrong(!)Password
+      - ACCEPT_EULA=1
+    restart: on-failure:5
+    healthcheck:
+      test: /opt/mssql-tools/bin/sqlcmd -S localhost -U sa -P "yourStrong(!)Password" -Q "SELECT 1" || exit 1
+      interval: 10s
+      timeout: 3s
+      retries: 10
+      start_period: 10s
+    volumes:
+      - ./sqlserver/data:/var/opt/mssql/data
+      - ./sqlserver/log:/var/opt/mssql/log
+
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: backend
+    depends_on:
+      sql_server:
+        condition: service_healthy
+    ports:
+      - "5000:5000"
+    links:
+      - sql_server
+    restart: on-failure:5
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: frontend
+    ports:
+      - "3000:3000"
+    depends_on: [sql_server,backend]
+    links:
+      - backend
+    restart: on-failure:5
