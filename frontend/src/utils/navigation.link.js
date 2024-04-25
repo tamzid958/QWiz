@@ -74,8 +74,9 @@ const navigationLinks = [
     access: ["Admin"],
     hidden: false,
     description: `Any user can be created from here with role. Random user can't register. 
-    Admin should register reviewer or question setter or new admin. Currently user 
-    management is in limited section, so any user can't be edited.`,
+    Admin should register reviewer or question setter or new admin. If you want to revoke access
+    of any user then simply block the user, by switch on blocked section. User can be edited at 
+    any time.`,
   },
   {
     title: "Account",
