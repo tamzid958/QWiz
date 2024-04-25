@@ -22,7 +22,7 @@ public class AuthenticationService(
         {
             var user = repositoryWrapper
                 .AppUser
-                .GetFirstBy(o => o.UserName == loginDto.Username,
+                .GetFirstBy(o => o.UserName == loginDto.Username && !o.LockoutEnabled,
                     o => o.UserRoles.Select(x => x.Role)
                 );
 
@@ -126,6 +126,13 @@ public class AuthenticationService(
         if (userIdentity != null) return repositoryWrapper.AppUser.GetFirstBy(o => o.UserName == userIdentity.Name);
 
         throw new UnauthorizedAccessException("User not authenticated or identity not found");
+    }
+
+    public AppUser LockAccount(string id)
+    {
+        var user = repositoryWrapper.AppUser.GetById(id);
+        user.LockoutEnabled = !user.LockoutEnabled;
+        return repositoryWrapper.AppUser.Update(user);
     }
 
     public AppUser CurrentUserInWhichRole(out bool isAdmin, out bool isReviewer, out bool isQuestionSetter)

@@ -33,11 +33,11 @@ public class AppUserController(AppUserService appUserService) : ControllerBase
         return Ok(appUserService.GetById(id));
     }
 
-    [HttpPut("{id}")]
+    [HttpPatch("{id}")]
     [ProducesResponseType(typeof(AppUser), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(ExceptionMessage), StatusCodes.Status401Unauthorized)]
-    public IActionResult Update(string id, [FromBody] UpdateAppUserDto userDto)
+    public async Task<IActionResult> Update(string id, [FromBody] UpdateAppUserDto userDto)
     {
-        return Ok(appUserService.Update(id, userDto));
+        return Ok(await appUserService.Update(id, userDto));
     }
 }

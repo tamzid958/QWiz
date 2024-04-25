@@ -53,4 +53,13 @@ public class AuthenticationController(AuthenticationService authenticationServic
     {
         return Ok(await authenticationService.GetRolesByUserId(userId));
     }
+
+    [HttpPatch("LockAccount/{id}")]
+    [ProducesResponseType(typeof(AppUser), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(ExceptionMessage), StatusCodes.Status401Unauthorized)]
+    [Authorize(Roles = "Admin")]
+    public IActionResult LockAccount(string id)
+    {
+        return Ok(authenticationService.LockAccount(id));
+    }
 }

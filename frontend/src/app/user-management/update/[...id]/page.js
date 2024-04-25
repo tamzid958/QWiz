@@ -10,37 +10,53 @@ import { LoadingButton } from "@mui/lab";
 import { useState } from "react";
 import { toast } from "react-toastify";
 import { requestApi } from "@/utils/axios.settings";
-import { useRouter } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
+import useSWR from "swr";
+import Loader from "@/components/Loader";
 
 const Page = () => {
+  const params = useParams();
+
+  const { data, mutate } = useSWR({ url: "/AppUser/" + params.id });
+
   const [loading, setLoading] = useState(false);
   const router = useRouter();
-  return (
+
+  return !data ? (
+    <div className="w-full">
+      <Loader />
+    </div>
+  ) : (
     <>
       <Typography
         variant="h5"
         component="h5"
         className="font-bold text-blue-800"
       >
-        Create new User
+        Update User
       </Typography>
       <div className="w-full">
         <FormContainer
+          defaultValues={{
+            ...data,
+            roles: data.userRoles?.[0]?.role.name,
+          }}
           onSuccess={async (data) => {
             setLoading(true);
             await requestApi({
-              method: "POST",
-              url: "/Authentication/Register",
+              method: "PATCH",
+              url: `/AppUser/${params.id}`,
               data: {
                 ...data,
                 roles: [data.roles],
               },
             }).then(({ error }) => {
+              setLoading(false);
               error
-                ? toast.error("User Creation Failed")
-                : toast.success("User Created Successfully");
+                ? toast.error("User Update Failed")
+                : toast.success("User Updated Successfully");
+              !error && mutate();
               !error && router.back();
-              error && setLoading(false);
             });
           }}
         >
@@ -65,14 +81,6 @@ const Page = () => {
               required
               label="Phone Number"
               type="tel"
-              fullWidth
-              autoComplete="off"
-            />
-            <TextFieldElement
-              name="password"
-              required
-              label="Password"
-              type="password"
               fullWidth
               autoComplete="off"
             />

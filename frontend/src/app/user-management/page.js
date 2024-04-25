@@ -3,6 +3,7 @@
 import {
   Button,
   Chip,
+  Switch,
   Table,
   TableBody,
   TableCell,
@@ -11,18 +12,24 @@ import {
   TableRow,
 } from "@mui/material";
 import useSWR from "swr";
-import { Add } from "@mui/icons-material";
+import { Add, Edit } from "@mui/icons-material";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
+import LockConfirmation from "@/components/LockConfirmation";
+import { requestApi } from "@/utils/axios.settings";
+import { toast } from "react-toastify";
 
 const UserManagement = () => {
   const [params, setParams] = useState({
     page: 1,
     size: 20,
   });
-  const { data } = useSWR({ url: "/AppUser", params });
+  const { data, mutate } = useSWR({ url: "/AppUser", params });
   const router = useRouter();
-
+  const [lockDialog, setLockDialog] = useState({
+    dialog: false,
+    id: null,
+  });
   return (
     <>
       <Button
@@ -42,6 +49,8 @@ const UserManagement = () => {
               <TableCell align="center">Role</TableCell>
               <TableCell>Email</TableCell>
               <TableCell>Phone Number</TableCell>
+              <TableCell align="center">Blocked</TableCell>
+              <TableCell align="center">Actions</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
@@ -57,6 +66,29 @@ const UserManagement = () => {
                 </TableCell>
                 <TableCell>{datum.email}</TableCell>
                 <TableCell>{datum.phoneNumber ?? "not available"}</TableCell>
+                <TableCell align="center">
+                  <Switch
+                    checked={datum.lockoutEnabled}
+                    label="Blocked"
+                    onChange={() =>
+                      setLockDialog({
+                        dialog: true,
+                        id: datum.id,
+                      })
+                    }
+                  />
+                </TableCell>
+                <TableCell align="center">
+                  <Button
+                    startIcon={<Edit />}
+                    onClick={() =>
+                      router.push(`/user-management/update/${datum.id}`)
+                    }
+                    variant="conatined"
+                  >
+                    Edit
+                  </Button>
+                </TableCell>
               </TableRow>
             ))}
           </TableBody>
@@ -75,6 +107,30 @@ const UserManagement = () => {
           }}
         />
       </div>
+      <LockConfirmation
+        open={lockDialog.dialog}
+        handleClose={async (confirmation) => {
+          setLockDialog({
+            dialog: false,
+            id: null,
+          });
+          if (confirmation) {
+            await requestApi({
+              url: `/Authentication/LockAccount/${lockDialog.id}`,
+              method: "PATCH",
+            }).then(({ data, error }) => {
+              error
+                ? toast.error("User Lock Failed")
+                : toast.success(
+                    data.lockoutEnabled
+                      ? "User Locked Successfully"
+                      : "User Unlocked Successfully",
+                  );
+              !error && mutate();
+            });
+          }
+        }}
+      />
     </>
   );
 };

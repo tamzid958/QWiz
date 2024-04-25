@@ -12,8 +12,8 @@ using QWiz.Databases;
 namespace QWiz.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20240424220323_Initial")]
-    partial class Initial
+    [Migration("20240425082420_v1.0")]
+    partial class v10
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -130,6 +130,7 @@ namespace QWiz.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Email")
+                        .IsRequired()
                         .HasMaxLength(256)
                         .HasColumnType("nvarchar(256)");
 
@@ -159,7 +160,8 @@ namespace QWiz.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("PhoneNumber")
-                        .HasColumnType("nvarchar(max)");
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<bool>("PhoneNumberConfirmed")
                         .HasColumnType("bit");
@@ -177,6 +179,9 @@ namespace QWiz.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("Email")
+                        .IsUnique();
+
                     b.HasIndex("NormalizedEmail")
                         .HasDatabaseName("EmailIndex");
 
@@ -185,22 +190,26 @@ namespace QWiz.Migrations
                         .HasDatabaseName("UserNameIndex")
                         .HasFilter("[NormalizedUserName] IS NOT NULL");
 
+                    b.HasIndex("PhoneNumber")
+                        .IsUnique();
+
                     b.ToTable("AspNetUsers", (string)null);
 
                     b.HasData(
                         new
                         {
-                            Id = "a2cbb976-2a83-49a0-8625-12261c934bc3",
+                            Id = "d0cb5810-ac69-457e-ad11-d168f29221b8",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "668e6ca8-8c7f-499c-8368-996ca1da99d3",
+                            ConcurrencyStamp = "9386a6af-bd8c-48a7-9310-b6aca86069c9",
                             Email = "tamjidahmed958@gmail.com",
                             EmailConfirmed = true,
                             FullName = "Tamzid Ahmed",
                             LockoutEnabled = false,
                             NormalizedUserName = "TAMZID",
-                            PasswordHash = "AQAAAAIAAYagAAAAEIbLNtaXtLXOg2/QRIuaNnydvlw1CN4GMj1XNjBTv4g78Fuf3Ot04UcMNYKgYcXv3w==",
+                            PasswordHash = "AQAAAAIAAYagAAAAEFhlY6pabRQuTLPb3QdMDpQIJ3CUgvMEmS8qULwdHpjEwBC9y3E/d7bfXddxPyiXCQ==",
+                            PhoneNumber = "01521203280",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "eb7b3977-e5fa-4de4-9f0c-f9e6324ddf7f",
+                            SecurityStamp = "efe16dcb-2d24-427b-b365-65ec57dacfa3",
                             TwoFactorEnabled = false,
                             UserName = "tamzid"
                         });
@@ -235,22 +244,22 @@ namespace QWiz.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "3c1ed711-6da2-40be-8565-542ebd354bbd",
-                            ConcurrencyStamp = "3c1ed711-6da2-40be-8565-542ebd354bbd",
+                            Id = "f82d5874-916f-45d3-8b84-79547e7e1eeb",
+                            ConcurrencyStamp = "f82d5874-916f-45d3-8b84-79547e7e1eeb",
                             Name = "Admin",
                             NormalizedName = "ADMIN"
                         },
                         new
                         {
-                            Id = "9e37982f-e0b8-4def-9dd3-df21f16326a0",
-                            ConcurrencyStamp = "5a500dd9-bf0a-4c2e-b67e-b004fbee60d7",
+                            Id = "7c4fcd97-5efc-41b9-8df2-ff2c3b6b5e73",
+                            ConcurrencyStamp = "674fbeae-7e57-4cae-8277-948464cfc33c",
                             Name = "Reviewer",
                             NormalizedName = "REVIEWER"
                         },
                         new
                         {
-                            Id = "6ddcb72c-5efb-4505-ac20-0a28b33d29a7",
-                            ConcurrencyStamp = "67f672c2-7da0-404e-a05f-1fe4950402ec",
+                            Id = "17377ee2-8c41-4ec9-97c8-4f12780acc71",
+                            ConcurrencyStamp = "72844698-2534-4a79-a707-eccc6d4ea342",
                             Name = "QuestionSetter",
                             NormalizedName = "QUESTIONSETTER"
                         });
@@ -273,8 +282,8 @@ namespace QWiz.Migrations
                     b.HasData(
                         new
                         {
-                            UserId = "a2cbb976-2a83-49a0-8625-12261c934bc3",
-                            RoleId = "3c1ed711-6da2-40be-8565-542ebd354bbd"
+                            UserId = "d0cb5810-ac69-457e-ad11-d168f29221b8",
+                            RoleId = "f82d5874-916f-45d3-8b84-79547e7e1eeb"
                         });
                 });
 

@@ -24,12 +24,6 @@ public class EntityProfile : Profile
                     opts.Condition((_, _, srcMember) => srcMember != null)
             );
 
-        CreateMap<UpdateAppUserDto, AppUser>()
-            .ForAllMembers(
-                opts =>
-                    opts.Condition((_, _, srcMember) => srcMember != null)
-            );
-
         CreateMap<QuestionDto, Question>()
             .ForMember(o => o.Category, c => c.Ignore())
             .ForMember(o => o.ReviewLogs, c => c.Ignore())

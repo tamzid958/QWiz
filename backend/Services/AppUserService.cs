@@ -1,4 +1,5 @@
-﻿using QWiz.Entities;
+﻿using Microsoft.AspNetCore.Identity;
+using QWiz.Entities;
 using QWiz.Helpers.EntityMapper.DTOs;
 using QWiz.Helpers.HttpQueries;
 using QWiz.Helpers.Paginator;
@@ -6,7 +7,7 @@ using QWiz.Repositories.Wrapper;
 
 namespace QWiz.Services;
 
-public class AppUserService(IRepositoryWrapper repositoryWrapper)
+public class AppUserService(IRepositoryWrapper repositoryWrapper, UserManager<AppUser> userManager)
 {
     public PagedResponse<List<AppUser>> Get(PaginationFilter paginationFilter, HttpRequest request,
         AppUserQueries appUserQueries)
@@ -30,16 +31,30 @@ public class AppUserService(IRepositoryWrapper repositoryWrapper)
 
     public AppUser GetById(string id)
     {
-        return repositoryWrapper.AppUser.GetById(id);
+        return repositoryWrapper.AppUser.GetFirstBy(
+            o => o.Id == id,
+            o => o.UserRoles.Select(x => x.Role)
+        );
     }
 
-    public AppUser Update(string id, UpdateAppUserDto userDto)
+    public async Task<AppUser> Update(string id, UpdateAppUserDto userDto)
     {
         var user = repositoryWrapper.AppUser.GetById(id);
 
         user.FullName = userDto.FullName;
         user.PhoneNumber = userDto.PhoneNumber;
+        user.Email = userDto.Email;
 
-        return repositoryWrapper.AppUser.Update(user);
+        var updatedUser = repositoryWrapper.AppUser.Update(user);
+
+        var roles = await userManager.GetRolesAsync(user);
+
+        await userManager.RemoveFromRolesAsync(updatedUser, roles);
+
+        var roleResult = await userManager.AddToRolesAsync(updatedUser, userDto.Roles.Select(x => x.ToString()));
+        if (!roleResult.Succeeded)
+            throw new InvalidOperationException("user role assignment failed");
+
+        return updatedUser;
     }
 }

@@ -93,6 +93,7 @@ public class AppDbContext : IdentityDbContext<AppUser, ApplicationRole, string, 
         {
             Id = adminId,
             Email = "tamjidahmed958@gmail.com",
+            PhoneNumber = "01521203280",
             EmailConfirmed = true,
             FullName = "Tamzid Ahmed",
             UserName = "tamzid",
