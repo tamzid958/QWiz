@@ -92,13 +92,12 @@ public class AuthenticationService(
         return [.. await userManager.GetRolesAsync((await userManager.FindByIdAsync(id))!)];
     }
 
-    public async void ChangePasswordAsync(string email, string oldPassword, string confirmPassword)
+    public async Task ChangePasswordAsync(string userName, string oldPassword, string newPassword)
     {
-        await userManager.ChangePasswordAsync(
-            (await userManager.FindByEmailAsync(email))!,
-            oldPassword,
-            confirmPassword
-        );
+        var user = await userManager.FindByNameAsync(userName);
+
+        if (user == null) throw new UnauthorizedAccessException();
+        await userManager.ChangePasswordAsync(user, oldPassword, newPassword);
     }
 
     public async void ForgetPassword(string email, string domain)

@@ -62,4 +62,18 @@ public class AuthenticationController(AuthenticationService authenticationServic
     {
         return Ok(authenticationService.LockAccount(id));
     }
+
+    [HttpPut("ChangePassword")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(ExceptionMessage), StatusCodes.Status401Unauthorized)]
+    [Authorize]
+    public async Task<IActionResult> ChangePassword([FromBody] ChangePasswordDto changePasswordDto)
+    {
+        await authenticationService.ChangePasswordAsync(
+            changePasswordDto.UserName,
+            changePasswordDto.OldPassword,
+            changePasswordDto.NewPassword
+        );
+        return Ok();
+    }
 }
