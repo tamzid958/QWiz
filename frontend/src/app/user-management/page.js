@@ -18,6 +18,7 @@ import { useState } from "react";
 import LockConfirmation from "@/components/LockConfirmation";
 import { requestApi } from "@/utils/axios.settings";
 import { toast } from "react-toastify";
+import { useSession } from "next-auth/react";
 
 const UserManagement = () => {
   const [params, setParams] = useState({
@@ -30,6 +31,8 @@ const UserManagement = () => {
     dialog: false,
     id: null,
   });
+  const session = useSession();
+
   return (
     <>
       <Button
@@ -69,6 +72,7 @@ const UserManagement = () => {
                 <TableCell align="center">
                   <Switch
                     checked={datum.lockoutEnabled}
+                    disabled={session.data?.user.userName === datum.userName}
                     label="Blocked"
                     onChange={() =>
                       setLockDialog({
