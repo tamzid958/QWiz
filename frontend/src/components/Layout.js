@@ -94,18 +94,17 @@ const Layout = ({ children }) => {
   const handleDrawerOpen = () => setOpenDrawerDrawer(true);
 
   const handleDrawerClose = () => setOpenDrawerDrawer(false);
-  const [userFullName, setUserFullName] = useState("");
-  const [roles, setRoles] = useState([]);
-
-  useEffect(() => {
-    if (session?.data?.user) {
-      setUserFullName(session?.data?.user?.fullName);
-      setRoles(session?.data?.user?.roles);
-    }
-  }, [session?.data?.user]);
 
   if (pathname.startsWith("/auth")) {
     return <>{children}</>;
+  }
+
+  let userFullName = "";
+  let roles = [];
+
+  if(session?.data?.user) {
+    userFullName = session?.data?.user?.fullName;
+    roles = session?.data?.user?.roles;
   }
 
   return (
