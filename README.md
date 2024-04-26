@@ -14,6 +14,7 @@ Welcome to the Question Bank Management System! This system helps manage the cre
   - [User Management](#user-management)
 - [Installation](#installation)
 - [Running the Project](#running-the-project)
+- [Future Goals](#future-goals)
 - [Contributing](#contributing)
 - [License](#license)
 
@@ -64,6 +65,39 @@ To run the project, make sure ports 3000 and 65415 are free, then execute the fo
 ```bash
 docker-compose up -d
 ```
+
+## Future Goals
+
+Welcome to the Future Goals section of the Question Bank Management System!
+
+## Overview
+
+This repository hosts the roadmap and planned features for the Question Bank Management System. Here's a glimpse into the exciting features we're planning to implement to enhance your experience:
+
+## Future Goals
+
+- **Enhanced Question Editor**: Upgrade your question creation experience with advanced features like rich text formatting, image uploading, and equation rendering.
+
+- **Question Versioning**: Track revisions effortlessly with version control for questions. Easily compare different versions, enhancing collaboration and ensuring transparency in the review process.
+
+- **Integration with Learning Management Systems (LMS)**: Seamlessly import/export questions and synchronize data with popular LMS platforms like Moodle, Canvas, or Blackboard.
+
+- **Automated Question Generation**: Save time and effort by exploring algorithms or plugins for automatically generating questions based on predefined criteria or learning objectives.
+
+- **Analytics Dashboard**: Gain valuable insights into question usage, review progress, user activity, and performance metrics with a comprehensive analytics dashboard.
+
+- **Mobile Application**: Stay connected and productive on the go with our mobile application companion. Access and interact with the platform anytime, anywhere, enhancing accessibility and convenience.
+
+- **Localization and Internationalization**: Embrace diversity and inclusivity with localization and internationalization features. Support multiple languages and cultural preferences to broaden the system's reach.
+
+- **Gamification Elements**: Inject fun and motivation into the learning experience with gamification elements like badges, leaderboards, and rewards.
+
+- **Advanced User Permissions**: Tailor permissions to specific roles and responsibilities with enhanced user management capabilities. Enjoy more granular control over access rights for effective administration.
+
+- **Machine Learning for Content Recommendations**: Personalize the learning journey with machine learning algorithms analyzing user behavior and preferences. Receive tailored content recommendations for questions, categories, and learning resources.
+
+These future goals are designed to elevate the functionality, usability, and effectiveness of the Question Bank Management System, empowering educators, content creators, and learners alike. Let's build a brighter future together! 🚀
+
 
 ## Contributing
 
