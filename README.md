@@ -68,14 +68,6 @@ docker-compose up -d
 
 ## Future Goals
 
-Welcome to the Future Goals section of the Question Bank Management System!
-
-## Overview
-
-This repository hosts the roadmap and planned features for the Question Bank Management System. Here's a glimpse into the exciting features we're planning to implement to enhance your experience:
-
-## Future Goals
-
 - **Enhanced Question Editor**: Upgrade your question creation experience with advanced features like rich text formatting, image uploading, and equation rendering.
 
 - **Question Versioning**: Track revisions effortlessly with version control for questions. Easily compare different versions, enhancing collaboration and ensuring transparency in the review process.
