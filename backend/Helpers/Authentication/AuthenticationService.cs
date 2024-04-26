@@ -122,7 +122,11 @@ public class AuthenticationService(
     public AppUser GetCurrentUser()
     {
         var userIdentity = httpContextAccessor.HttpContext!.User.Identity;
-        if (userIdentity != null) return repositoryWrapper.AppUser.GetFirstBy(o => o.UserName == userIdentity.Name);
+        if (userIdentity != null) 
+            return repositoryWrapper.AppUser.GetFirstBy(
+            o => o.UserName == userIdentity.Name,
+            o => o.UserRoles.Select(x => x.Role)
+            );
 
         throw new UnauthorizedAccessException("User not authenticated or identity not found");
     }

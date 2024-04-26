@@ -1,6 +1,6 @@
 "use client";
 import * as React from "react";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { styled } from "@mui/material/styles";
 import Box from "@mui/material/Box";
 import Drawer from "@mui/material/Drawer";
@@ -19,14 +19,13 @@ import navigationLinks from "@/utils/navigation.link";
 import { usePathname, useRouter } from "next/navigation";
 import {
   Avatar,
-  Breadcrumbs,
+  Breadcrumbs, Chip,
   Fab,
   Link,
   Paper,
   Tooltip,
   Typography,
 } from "@mui/material";
-import { useSession } from "next-auth/react";
 import {
   breadCrumbGenerator,
   getLettersFromString,
@@ -36,6 +35,7 @@ import _ from "lodash";
 import { ToastContainer } from "react-toastify";
 import Logo from "../../public/logo.png";
 import Image from "next/image";
+import useSWR from "swr";
 
 const drawerWidth = 240;
 
@@ -88,8 +88,9 @@ const Layout = ({ children }) => {
   const [openDrawer, setOpenDrawerDrawer] = useState(false);
 
   const pathname = usePathname();
+  const {data} = useSWR(!pathname.startsWith("/auth") && {url: "/Authentication/UserInfo"});
+
   const router = useRouter();
-  const session = useSession();
 
   const handleDrawerOpen = () => setOpenDrawerDrawer(true);
 
@@ -98,14 +99,9 @@ const Layout = ({ children }) => {
   if (pathname.startsWith("/auth")) {
     return <>{children}</>;
   }
-
-  let userFullName = "";
-  let roles = [];
-
-  if(session?.data?.user) {
-    userFullName = session?.data?.user?.fullName;
-    roles = session?.data?.user?.roles;
-  }
+  
+  const userFullName = data?.fullName ?? "";
+  const roles = data?.["userRoles"].map((roles) => roles.role.name) ?? [];
 
   return (
     <Box sx={{ display: "flex" }}>
