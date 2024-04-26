@@ -22,6 +22,7 @@ const handler = NextAuth({
       },
       async authorize(credentials, req) {
         const response = await requestApi({
+          baseURL: process.env.NEXT_SERVER_BASE_URL,
           url: "/Authentication/Login",
           method: "POST",
           data: credentials,

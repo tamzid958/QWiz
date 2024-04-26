@@ -131,6 +131,7 @@ export const getServerApi = async ({ req, url, params = {} }) => {
  */
 export const requestApi = async ({
   req,
+  baseURL,
   url,
   method = "GET",
   data = {},
@@ -145,6 +146,7 @@ export const requestApi = async ({
     const requestObj = {
       method,
       url,
+      baseURL,
       data,
       params,
       headers: { ...(await bearerToken({ req })), scheme: "https" },
