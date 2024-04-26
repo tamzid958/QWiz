@@ -1,6 +1,6 @@
 "use client";
 import * as React from "react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { styled } from "@mui/material/styles";
 import Box from "@mui/material/Box";
 import Drawer from "@mui/material/Drawer";
@@ -94,9 +94,15 @@ const Layout = ({ children }) => {
   const handleDrawerOpen = () => setOpenDrawerDrawer(true);
 
   const handleDrawerClose = () => setOpenDrawerDrawer(false);
+  const [userFullName, setUserFullName] = useState("");
+  const [roles, setRoles] = useState([]);
 
-  const userFullName = session?.data?.user?.fullName;
-  const roles = session?.data?.user?.roles ?? [];
+  useEffect(() => {
+    if (session?.data?.user) {
+      setUserFullName(session?.data?.user?.fullName);
+      setRoles(session?.data?.user?.roles);
+    }
+  }, [session?.data?.user]);
 
   if (pathname.startsWith("/auth")) {
     return <>{children}</>;
