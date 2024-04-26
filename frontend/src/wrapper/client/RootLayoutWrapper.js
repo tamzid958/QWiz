@@ -6,7 +6,7 @@ import { SWRConfig } from "swr";
 
 const RootLayoutWrapper = ({ session: serverSession, children }) => {
   return (
-    <SessionProvider session={serverSession} refreshInterval={60 * 60}>
+    <SessionProvider session={serverSession}>
       <SWRConfig
         value={{
           provider: () => new Map(),
