@@ -61,10 +61,13 @@ To use the Question Bank Management System locally, follow these steps:
 
 ## Running the Project
 
-To run the project, make sure ports 3000 and 65415 are free, then execute the following command:
+To run the project, make sure ports 3000 and 65415 are free and docker must be installed, then execute the following command:
 ```bash
 docker-compose up -d
 ```
+Once all services are up and running smoothly in Docker, you can easily access the Qwiz Website by navigating to: <br>
+[http://127.0.0.1:3000](http://127.0.0.1:3000)
+
 
 ## Future Goals
 
