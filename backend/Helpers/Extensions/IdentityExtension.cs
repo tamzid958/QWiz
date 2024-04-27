@@ -5,6 +5,7 @@ using Microsoft.IdentityModel.Tokens;
 using QWiz.Databases;
 using QWiz.Entities;
 using QWiz.Helpers.Authentication;
+using QWiz.Helpers.Authentication.TokenService;
 
 namespace QWiz.Helpers.Extensions;
 
@@ -30,6 +31,7 @@ public static class IdentityExtension
             .AddEntityFrameworkStores<AppDbContext>()
             .AddDefaultTokenProviders();
 
+        services.AddScoped<ITokenService, TokenService>();
         services.AddScoped<AuthenticationService>();
 
         services.Configure<DataProtectionTokenProviderOptions>(opt =>

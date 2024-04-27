@@ -1,19 +1,21 @@
 using System.Data;
 using System.IdentityModel.Tokens.Jwt;
+using System.Security.Authentication;
 using System.Security.Claims;
 using System.Text;
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.IdentityModel.Tokens;
 using QWiz.Entities;
 using QWiz.Entities.Enum;
+using QWiz.Helpers.Authentication.TokenService;
 using QWiz.Repositories.Wrapper;
 
 namespace QWiz.Helpers.Authentication;
 
 public class AuthenticationService(
-    IConfiguration configuration,
     UserManager<AppUser> userManager,
     IRepositoryWrapper repositoryWrapper,
+    ITokenService tokenService,
     IHttpContextAccessor httpContextAccessor)
 {
     public async Task<AuthClaim> Login(LoginDto loginDto)
@@ -38,22 +40,24 @@ public class AuthenticationService(
                 new(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
             };
 
-            authClaims.AddRange(userRoles.Select(userRole => new Claim(ClaimTypes.Role, userRole)));
-
-            var authSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(configuration["JWT:Secret"]!));
-
-            var token = new JwtSecurityToken(
-                configuration["JWT:ValidIssuer"],
-                configuration["JWT:ValidAudience"],
-                expires: DateTime.Now.AddDays(7),
-                claims: authClaims,
-                signingCredentials: new SigningCredentials(authSigningKey, SecurityAlgorithms.HmacSha256)
+            authClaims.AddRange(
+                userRoles.Select(userRole => new Claim(
+                    ClaimTypes.Role,
+                    userRole
+                ))
             );
+            var refreshToken = tokenService.GenerateRefreshToken();
+
+
+            var updateUser = repositoryWrapper.AppUser.GetById(user.Id);
+            updateUser.RefreshToken = refreshToken;
+            updateUser.RefreshTokenExpiryTime = DateTime.Now.AddDays(7);
+            await userManager.UpdateAsync(updateUser);
 
             return new AuthClaim
             {
-                Token = new JwtSecurityTokenHandler().WriteToken(token),
-                Expiration = token.ValidTo,
+                Token = tokenService.GenerateAccessToken(authClaims),
+                RefreshToken = refreshToken,
                 AppUser = user,
                 Roles = user.UserRoles.Select(o => o.Role.Name).ToList()!
             };
@@ -64,18 +68,52 @@ public class AuthenticationService(
         }
     }
 
+    public Task<AuthClaim> RefreshToken(TokenModel tokenModel)
+    {
+        var accessToken = tokenModel.AccessToken;
+        var refreshToken = tokenModel.RefreshToken;
+        var principal = tokenService.GetPrincipalFromExpiredToken(accessToken);
+        if (principal.Identity == null) throw new AuthenticationFailureException("Invalid user");
+
+        var username = principal.Identity.Name;
+        var user = repositoryWrapper.AppUser.GetFirstBy(
+            o => o.UserName == username,
+            o => o.UserRoles.Select(x => x.Role)
+        );
+        if (user == null) throw new AuthenticationFailureException("Invalid user");
+
+        if (user.RefreshToken != refreshToken || user.RefreshTokenExpiryTime <= DateTime.Now)
+            throw new InvalidCredentialException("Invalid client request");
+
+        var newAccessToken = tokenService.GenerateAccessToken(principal.Claims);
+        var newRefreshToken = tokenService.GenerateRefreshToken();
+
+        var updateUser = repositoryWrapper.AppUser.GetById(user.Id);
+        updateUser.RefreshToken = newRefreshToken;
+        repositoryWrapper.AppUser.Update(updateUser);
+
+        return Task.FromResult(new AuthClaim
+        {
+            Token = newAccessToken,
+            RefreshToken = refreshToken,
+            AppUser = user,
+            Roles = user.UserRoles.Select(o => o.Role.Name).ToList()!
+        });
+    }
+
+
     public async Task<AppUser> Register(AppUser user, string password, List<Role> roles)
     {
         try
         {
-            if (await userManager.FindByEmailAsync(user.Email!) != null)
+            if (await userManager.FindByEmailAsync(user.Email) != null)
                 throw new DuplicateNameException("Email already registered with different user");
             if (repositoryWrapper.AppUser.Any(o => o.PhoneNumber == user.PhoneNumber))
                 throw new DuplicateNameException("Phone Number already registered with different user");
             var userResult = await userManager.CreateAsync(user, password);
             if (!userResult.Succeeded)
                 throw new InvalidDataException("user registration failed");
-            var newUser = await userManager.FindByEmailAsync(user.Email!);
+            var newUser = await userManager.FindByEmailAsync(user.Email);
             var roleResult = await userManager.AddToRolesAsync(newUser!, roles.ConvertAll(input => input.ToString()));
             if (!roleResult.Succeeded)
                 throw new InvalidOperationException("user role assignment failed");
@@ -122,10 +160,10 @@ public class AuthenticationService(
     public AppUser GetCurrentUser()
     {
         var userIdentity = httpContextAccessor.HttpContext!.User.Identity;
-        if (userIdentity != null) 
+        if (userIdentity != null)
             return repositoryWrapper.AppUser.GetFirstBy(
-            o => o.UserName == userIdentity.Name,
-            o => o.UserRoles.Select(x => x.Role)
+                o => o.UserName == userIdentity.Name,
+                o => o.UserRoles.Select(x => x.Role)
             );
 
         throw new UnauthorizedAccessException("User not authenticated or identity not found");

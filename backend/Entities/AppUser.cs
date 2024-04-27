@@ -22,5 +22,9 @@ public class AppUser : IdentityUser
 
     [JsonIgnore] public override string? PasswordHash { get; set; } = null!;
 
+    [JsonIgnore] [MaxLength(400)] public string? RefreshToken { get; set; }
+
+    [JsonIgnore] public DateTime RefreshTokenExpiryTime { get; set; } = DateTime.Now;
+
     public virtual ICollection<ApplicationUserRole> UserRoles { get; } = new List<ApplicationUserRole>();
 }

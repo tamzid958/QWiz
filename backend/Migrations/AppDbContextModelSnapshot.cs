@@ -163,6 +163,13 @@ namespace QWiz.Migrations
                     b.Property<bool>("PhoneNumberConfirmed")
                         .HasColumnType("bit");
 
+                    b.Property<string>("RefreshToken")
+                        .HasMaxLength(400)
+                        .HasColumnType("nvarchar(400)");
+
+                    b.Property<DateTime>("RefreshTokenExpiryTime")
+                        .HasColumnType("datetime2");
+
                     b.Property<string>("SecurityStamp")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -195,18 +202,19 @@ namespace QWiz.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "d0cb5810-ac69-457e-ad11-d168f29221b8",
+                            Id = "75d1047d-bba1-4df0-93d5-08e7b728c741",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "9386a6af-bd8c-48a7-9310-b6aca86069c9",
+                            ConcurrencyStamp = "2084849c-367b-4850-bb54-3a5ae4dbf2aa",
                             Email = "tamjidahmed958@gmail.com",
                             EmailConfirmed = true,
                             FullName = "Tamzid Ahmed",
                             LockoutEnabled = false,
                             NormalizedUserName = "TAMZID",
-                            PasswordHash = "AQAAAAIAAYagAAAAEFhlY6pabRQuTLPb3QdMDpQIJ3CUgvMEmS8qULwdHpjEwBC9y3E/d7bfXddxPyiXCQ==",
+                            PasswordHash = "AQAAAAIAAYagAAAAEMnx6xJ7UMIZ1gLJsoAbeWQLUkcBOYRXkV54wiZiFd0nDoGTYVeeyOSWJI0kLBzGmA==",
                             PhoneNumber = "01521203280",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "efe16dcb-2d24-427b-b365-65ec57dacfa3",
+                            RefreshTokenExpiryTime = new DateTime(2024, 4, 27, 20, 45, 5, 629, DateTimeKind.Local).AddTicks(9150),
+                            SecurityStamp = "ac6d1cfa-3ed6-451e-af98-26bce32e05f1",
                             TwoFactorEnabled = false,
                             UserName = "tamzid"
                         });
@@ -241,22 +249,22 @@ namespace QWiz.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "f82d5874-916f-45d3-8b84-79547e7e1eeb",
-                            ConcurrencyStamp = "f82d5874-916f-45d3-8b84-79547e7e1eeb",
+                            Id = "9c339dfd-4142-4949-b170-a3592ec82c98",
+                            ConcurrencyStamp = "9c339dfd-4142-4949-b170-a3592ec82c98",
                             Name = "Admin",
                             NormalizedName = "ADMIN"
                         },
                         new
                         {
-                            Id = "7c4fcd97-5efc-41b9-8df2-ff2c3b6b5e73",
-                            ConcurrencyStamp = "674fbeae-7e57-4cae-8277-948464cfc33c",
+                            Id = "f3f73849-88b6-4773-a4ae-e65d789b5937",
+                            ConcurrencyStamp = "47f59542-2846-406d-bdc4-d8c580e2c54f",
                             Name = "Reviewer",
                             NormalizedName = "REVIEWER"
                         },
                         new
                         {
-                            Id = "17377ee2-8c41-4ec9-97c8-4f12780acc71",
-                            ConcurrencyStamp = "72844698-2534-4a79-a707-eccc6d4ea342",
+                            Id = "5ced0647-3bf4-4784-ae9d-6a280b6956a6",
+                            ConcurrencyStamp = "75f35e7a-4e3a-49fd-9936-ef39a0a83b1a",
                             Name = "QuestionSetter",
                             NormalizedName = "QUESTIONSETTER"
                         });
@@ -279,8 +287,8 @@ namespace QWiz.Migrations
                     b.HasData(
                         new
                         {
-                            UserId = "d0cb5810-ac69-457e-ad11-d168f29221b8",
-                            RoleId = "f82d5874-916f-45d3-8b84-79547e7e1eeb"
+                            UserId = "75d1047d-bba1-4df0-93d5-08e7b728c741",
+                            RoleId = "9c339dfd-4142-4949-b170-a3592ec82c98"
                         });
                 });
 

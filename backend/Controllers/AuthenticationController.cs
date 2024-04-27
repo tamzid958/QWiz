@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
 using QWiz.Entities;
 using QWiz.Helpers.Authentication;
+using QWiz.Helpers.Authentication.TokenService;
 using QWiz.Helpers.EntityMapper.DTOs;
 using QWiz.Helpers.Exception;
 
@@ -23,6 +24,14 @@ public class AuthenticationController(AuthenticationService authenticationServic
     public async Task<IActionResult> Login([FromBody] LoginDto loginDto)
     {
         return Created(Request.Path.Value!, await authenticationService.Login(loginDto));
+    }
+    
+    [HttpPost("RefreshToken")]
+    [ProducesResponseType(typeof(AuthClaim), StatusCodes.Status201Created)]
+    [ProducesResponseType(typeof(ExceptionMessage), StatusCodes.Status401Unauthorized)]
+    public async Task<IActionResult> RefreshToken([FromBody] TokenModel tokenModel)
+    {
+        return Created(Request.Path.Value!, await authenticationService.RefreshToken(tokenModel));
     }
 
     [HttpPost("Register")]
