@@ -156,11 +156,15 @@ const createReviewersWithLog = (reviewers, reviewLogs) => {
     : [];
 };
 
+const parseJwt = (token) =>
+  JSON.parse(Buffer.from(token.split(".")[1], "base64").toString());
+
 export {
   getLettersFromString,
   textToDarkLightColor,
   breadCrumbGenerator,
   formatDate,
   sortByBooleanProperty,
-  createReviewersWithLog
+  createReviewersWithLog,
+  parseJwt,
 };

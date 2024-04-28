@@ -55,9 +55,13 @@ const checkAccess = (pathname, userRoles) => {
 export async function middleware(request, event) {
   const response = NextResponse.next();
 
-  const token = await getToken({ req: request });
+  const token = await getToken({
+    req: request,
+    secret: process.env.NEXTAUTH_SECRET,
+  });
   const pathname = request.nextUrl.pathname;
-  const roles = token?.user.roles ?? [];
+
+  const roles = token?.user?.roles ?? [];
 
   if (!token) {
     const signInUrl = new URL("/api/auth/signin", request.url);
@@ -81,6 +85,6 @@ export async function middleware(request, event) {
 
 export const config = {
   matcher: [
-    "/((?!api|_next/static|_next/image|favicon.ico|auth/login|not-found).*)",
+    "/((?!api|_next/static|_next/image|favicon.ico|auth/login|auth/logout|not-found).*)",
   ],
 };

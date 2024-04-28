@@ -1,6 +1,6 @@
 "use client";
 import * as React from "react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { styled } from "@mui/material/styles";
 import Box from "@mui/material/Box";
 import Drawer from "@mui/material/Drawer";
@@ -19,7 +19,7 @@ import navigationLinks from "@/utils/navigation.link";
 import { usePathname, useRouter } from "next/navigation";
 import {
   Avatar,
-  Breadcrumbs, Chip,
+  Breadcrumbs,
   Fab,
   Link,
   Paper,
@@ -36,6 +36,7 @@ import { ToastContainer } from "react-toastify";
 import Logo from "../../public/logo.png";
 import Image from "next/image";
 import useSWR from "swr";
+import { signOut, useSession } from "next-auth/react";
 
 const drawerWidth = 240;
 
@@ -88,9 +89,20 @@ const Layout = ({ children }) => {
   const [openDrawer, setOpenDrawerDrawer] = useState(false);
 
   const pathname = usePathname();
-  const {data} = useSWR(!pathname.startsWith("/auth") && {url: "/Authentication/UserInfo"});
+  const { data } = useSWR(
+    !pathname.startsWith("/auth") && { url: "/Authentication/UserInfo" },
+  );
 
   const router = useRouter();
+  const { data: sessionData } = useSession();
+
+  useEffect(() => {
+    // check if the error has occurred
+    if (sessionData?.user.error === "RefreshAccessTokenError") {
+      // Sign out here
+      signOut().then();
+    }
+  }, [sessionData?.user.error, router]);
 
   const handleDrawerOpen = () => setOpenDrawerDrawer(true);
 
@@ -99,7 +111,7 @@ const Layout = ({ children }) => {
   if (pathname.startsWith("/auth")) {
     return <>{children}</>;
   }
-  
+
   const userFullName = data?.fullName ?? "";
   const roles = data?.["userRoles"].map((roles) => roles.role.name) ?? [];
 

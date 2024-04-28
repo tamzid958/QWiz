@@ -54,9 +54,11 @@ public class AuthenticationService(
             updateUser.RefreshTokenExpiryTime = DateTime.Now.AddDays(7);
             await userManager.UpdateAsync(updateUser);
 
+            var tokenString = tokenService.GenerateAccessToken(authClaims);
+
             return new AuthClaim
             {
-                Token = tokenService.GenerateAccessToken(authClaims),
+                Token = tokenString,
                 RefreshToken = refreshToken,
                 AppUser = user,
                 Roles = user.UserRoles.Select(o => o.Role.Name).ToList()!
@@ -72,6 +74,8 @@ public class AuthenticationService(
     {
         var accessToken = tokenModel.AccessToken;
         var refreshToken = tokenModel.RefreshToken;
+        if (accessToken == null || refreshToken == null)
+            throw new AuthenticationException("empty accessToken or refresh token");
         var principal = tokenService.GetPrincipalFromExpiredToken(accessToken);
         if (principal.Identity == null) throw new AuthenticationFailureException("Invalid user");
 
@@ -85,7 +89,7 @@ public class AuthenticationService(
         if (user.RefreshToken != refreshToken || user.RefreshTokenExpiryTime <= DateTime.Now)
             throw new InvalidCredentialException("Invalid client request");
 
-        var newAccessToken = tokenService.GenerateAccessToken(principal.Claims);
+        var tokenString = tokenService.GenerateAccessToken(principal.Claims);
         var newRefreshToken = tokenService.GenerateRefreshToken();
 
         var updateUser = repositoryWrapper.AppUser.GetById(user.Id);
@@ -94,7 +98,7 @@ public class AuthenticationService(
 
         return Task.FromResult(new AuthClaim
         {
-            Token = newAccessToken,
+            Token = tokenString,
             RefreshToken = refreshToken,
             AppUser = user,
             Roles = user.UserRoles.Select(o => o.Role.Name).ToList()!
@@ -173,6 +177,7 @@ public class AuthenticationService(
     {
         var user = repositoryWrapper.AppUser.GetById(id);
         user.LockoutEnabled = !user.LockoutEnabled;
+        if (user.LockoutEnabled) user.RefreshToken = null;
         return repositoryWrapper.AppUser.Update(user);
     }
 

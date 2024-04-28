@@ -35,7 +35,8 @@ public static class IdentityExtension
         services.AddScoped<AuthenticationService>();
 
         services.Configure<DataProtectionTokenProviderOptions>(opt =>
-            opt.TokenLifespan = TimeSpan.FromHours(2));
+            opt.TokenLifespan = TimeSpan.FromDays(7)
+        );
     }
 
     public static void ConfigureJwtAuthentication(this IServiceCollection services, IConfiguration config)
