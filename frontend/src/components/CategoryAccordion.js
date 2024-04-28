@@ -19,7 +19,12 @@ import {
 import { formatDate } from "@/utils/common";
 import { ExpandMore, Visibility } from "@mui/icons-material";
 
-const QuestionsByCategory = ({ categoryId, reviewMode, mode }) => {
+const QuestionsByCategory = ({
+  categoryId,
+  reviewed,
+  mode,
+  isAddedToQuestionBank,
+}) => {
   const [params, setParams] = useState({
     page: 1,
   });
@@ -30,19 +35,12 @@ const QuestionsByCategory = ({ categoryId, reviewMode, mode }) => {
     params: {
       ...params,
       categoryId,
-      ...(mode === "review"
-        ? {
-            reviewMode: reviewMode ? "Reviewed" : "UnderReview",
-          }
-        : {}),
-      ...(mode === "questionBank"
-        ? {
-            isReadyForAddingQuestionBank: true,
-            issAddedToQuestionBank: !reviewMode,
-          }
-        : {}),
+      reviewed,
+      isAddedToQuestionBank,
     },
   });
+
+  const [dialog, setDialog] = useState({ open: false, question: null });
 
   useEffect(() => {
     if (categoryId) {
@@ -75,7 +73,13 @@ const QuestionsByCategory = ({ categoryId, reviewMode, mode }) => {
                 <Button
                   startIcon={<Visibility />}
                   variant="conatined"
-                  onClick={() => router.push(`/reviews/view/${datum.id}`)}
+                  onClick={() => {
+                    if (mode === "review") {
+                      router.push(`/reviews/view/${datum.id}`);
+                    } else if (mode === "questionBank") {
+                      router.push(`/question-bank/view/${datum.id}`);
+                    }
+                  }}
                 >
                   View
                 </Button>
@@ -98,14 +102,23 @@ const QuestionsByCategory = ({ categoryId, reviewMode, mode }) => {
   );
 };
 
-const CategoryAccordion = ({ datum, expanded, onChange, reviewMode, mode }) => (
+const CategoryAccordion = ({
+  datum,
+  expanded,
+  onChange,
+  reviewed,
+  isAddedToQuestionBank,
+  mode,
+}) => (
   <Accordion expanded={expanded === datum.id} onChange={onChange}>
     <AccordionSummary expandIcon={<ExpandMore />}>
       <Typography sx={{ width: "33%", flexShrink: 0 }}>{datum.name}</Typography>
     </AccordionSummary>
     <AccordionDetails>
       {expanded === datum.id && (
-        <QuestionsByCategory {...{ categoryId: expanded, reviewMode, mode }} />
+        <QuestionsByCategory
+          {...{ categoryId: expanded, reviewed, mode, isAddedToQuestionBank }}
+        />
       )}
     </AccordionDetails>
   </Accordion>

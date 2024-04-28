@@ -6,17 +6,8 @@ public class QuestionQueries
 {
     [FromQuery(Name = "categoryId")] public int? CategoryId { set; get; }
 
-    [FromQuery(Name = "isReadyForAddingQuestionBank")]
-    public bool? IsReadyForAddingQuestionBank { set; get; }
+    [FromQuery(Name = "reviewed")] public bool? Reviewed { set; get; }
 
-    [FromQuery(Name = "issAddedToQuestionBank")]
+    [FromQuery(Name = "isAddedToQuestionBank")]
     public bool? IsAddedToQuestionBank { set; get; }
-
-    [FromQuery(Name = "reviewMode")] public ReviewMode? ReviewMode { set; get; }
-}
-
-public enum ReviewMode
-{
-    Reviewed,
-    UnderReview
 }

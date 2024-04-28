@@ -83,7 +83,7 @@ const handler = NextAuth({
         };
         return token;
       }
-      console.log(Date.now(), token?.accessTokenExpires);
+
       if (Date.now() < token?.accessTokenExpires) {
         return token;
       }

@@ -149,7 +149,7 @@ const Layout = ({ children }) => {
                   }}
                 >
                   <Typography className="text-white font-bold font-sm">
-                    {getLettersFromString(userFullName ?? "N/A")}
+                    {getLettersFromString(userFullName ?? "N/A", 2)}
                   </Typography>
                 </Avatar>
                 <Typography className="text-white font-bold">

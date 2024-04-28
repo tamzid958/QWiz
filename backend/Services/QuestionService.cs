@@ -25,45 +25,79 @@ public class QuestionService(
             out var isQuestionSetter
         );
 
-        return repositoryWrapper.Question.GetAll(paginationFilter, request,
-            question => (questionQueries.CategoryId == null || question.CategoryId == questionQueries.CategoryId) &&
-                        (
-                            questionQueries.IsReadyForAddingQuestionBank == null ||
-                            question.IsReadyForAddingQuestionBank == questionQueries.IsReadyForAddingQuestionBank
-                        ) &&
-                        (
-                            questionQueries.IsAddedToQuestionBank == null ||
-                            question.IsAddedToQuestionBank == questionQueries.IsAddedToQuestionBank
-                        ) &&
-                        (
-                            isQuestionSetter
-                                ? question.CreatedById == currentUser.Id
-                                : isAdmin ||
-                                  (
-                                      isReviewer && question.Category.Reviewers.Any(reviewer =>
-                                          reviewer.AppUserId == currentUser.Id)
-                                  )
-                        ) &&
-                        (
-                            questionQueries.ReviewMode == null ||
-                            (
-                                isReviewer && questionQueries.ReviewMode == ReviewMode.Reviewed
-                                    ? question.ReviewLogs.Any(log => log.CreatedById == currentUser.Id)
-                                    : isReviewer && questionQueries.ReviewMode == ReviewMode.UnderReview
-                                        ? question.ReviewLogs.All(log => log.CreatedById != currentUser.Id)
-                                        : isAdmin && questionQueries.ReviewMode == ReviewMode.Reviewed
-                                            ? question.IsReadyForAddingQuestionBank == true
-                                            : isAdmin && questionQueries.ReviewMode == ReviewMode.UnderReview
-                                                ? question.IsReadyForAddingQuestionBank == false
-                                                : isQuestionSetter
-                            )
-                        ),
-            question => question.Category,
+        return isAdmin switch
+        {
+            true => GetForAdmin(request, paginationFilter, questionQueries),
+            _ => isReviewer switch
+            {
+                true => GetForReviewer(request, paginationFilter, questionQueries, currentUser),
+                _ => isQuestionSetter
+                    ? GetForQuestionSetter(request, paginationFilter, questionQueries, currentUser)
+                    : throw new DataException()
+            }
+        };
+    }
+
+    private PagedResponse<List<Question>> GetForQuestionSetter(
+        HttpRequest request,
+        PaginationFilter paginationFilter,
+        QuestionQueries questionQueries,
+        AppUser user
+    )
+    {
+        return repositoryWrapper.Question.GetAll(
+            paginationFilter,
+            request,
+            question =>
+                (questionQueries.CategoryId == null || question.CategoryId == questionQueries.CategoryId) &&
+                question.CreatedById == user.Id,
             question => question.ReviewLogs,
+            question => question.Category,
             question => question.CreatedBy!
         );
     }
 
+    private PagedResponse<List<Question>> GetForReviewer(
+        HttpRequest request,
+        PaginationFilter paginationFilter,
+        QuestionQueries questionQueries, AppUser user
+    )
+    {
+        return repositoryWrapper.Question.GetAll(
+            paginationFilter,
+            request,
+            question =>
+                (questionQueries.CategoryId == null || question.CategoryId == questionQueries.CategoryId) &&
+                question.Category.Reviewers.Any(reviewer => reviewer.AppUserId == user.Id) &&
+                (questionQueries.Reviewed == true
+                    ? question.ReviewLogs.Any(log => log.CreatedById == user.Id)
+                    : question.ReviewLogs.All(log => log.CreatedById != user.Id)),
+            question => question.Category,
+            question => question.CreatedBy!
+        );
+    }
+
+    private PagedResponse<List<Question>> GetForAdmin(
+        HttpRequest request,
+        PaginationFilter paginationFilter,
+        QuestionQueries questionQueries
+    )
+    {
+        return repositoryWrapper.Question.GetAll(
+            paginationFilter,
+            request,
+            question =>
+                (questionQueries.CategoryId == null || question.CategoryId == questionQueries.CategoryId) &&
+                (questionQueries.Reviewed == null ||
+                 (question.IsReadyForAddingQuestionBank == true && questionQueries.Reviewed == true
+                     ? question.IsAddedToQuestionBank != null : question.IsAddedToQuestionBank == null)) &&
+                (questionQueries.IsAddedToQuestionBank == null ||
+                 question.IsAddedToQuestionBank == questionQueries.IsAddedToQuestionBank),
+            question => question.ReviewLogs,
+            question => question.Category,
+            question => question.CreatedBy!
+        );
+    }
 
     public Question GetById(long id)
     {
@@ -138,10 +172,10 @@ public class QuestionService(
             .ToList();
     }
 
-    public Question AddToQuestionBank(long id)
+    public Question AddToQuestionBank(long id, bool accept)
     {
         var question = repositoryWrapper.Question.GetById(id);
-        question.IsAddedToQuestionBank = true;
+        question.IsAddedToQuestionBank = accept;
         return repositoryWrapper.Question.Update(question);
     }
 }

@@ -59,12 +59,12 @@ public class QuestionController(QuestionService questionService) : ControllerBas
     }
 
     [Authorize(Roles = "Admin")]
-    [HttpPatch("AddToBank/{id:long}")]
+    [HttpPatch("AddToBank/{id:long}/{accept:bool}")]
     [ProducesResponseType(typeof(Question), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(ExceptionMessage), StatusCodes.Status400BadRequest)]
-    public IActionResult AddToQuestionBank(long id)
+    public IActionResult AddToQuestionBank(long id, bool accept)
     {
-        return Ok(questionService.AddToQuestionBank(id));
+        return Ok(questionService.AddToQuestionBank(id, accept));
     }
 
     [Authorize(Roles = "QuestionSetter,Admin")]

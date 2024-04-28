@@ -1,7 +1,7 @@
 import _ from "lodash";
 import dateFormat from "dateformat";
 
-const getLettersFromString = (str) => {
+const getLettersFromString = (str, limit = null) => {
   const parts = str.split(" "); // Split the full name into parts by space
   let initials = "";
 
@@ -10,7 +10,7 @@ const getLettersFromString = (str) => {
     initials += part.charAt(0).toUpperCase(); // Add the first letter of each part, capitalized
   });
 
-  return initials;
+  return limit ? initials.substring(0, limit) : initials;
 };
 
 const textToDarkLightColor = (text) => {
@@ -103,7 +103,7 @@ function getNextObject(objects, currentObject) {
 }
 
 const formatDate = (date) => {
-  return dateFormat(new Date(date), "dddd, mmmm dS, yyyy, h:MM TT");
+  return dateFormat(new Date(date), "mmmm dS, yyyy, h:MM TT");
 };
 
 function sortByBooleanProperty(objects, propertyName) {

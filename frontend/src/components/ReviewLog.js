@@ -6,16 +6,28 @@ import {
   Stepper,
   Typography,
 } from "@mui/material";
-import { Check, PanTool } from "@mui/icons-material";
-import { Cancel } from "axios";
+import { Cancel, Check, PanTool } from "@mui/icons-material";
 import { formatDate } from "@/utils/common";
 import Box from "@mui/material/Box";
+import _ from "lodash";
 
-const ReviewLog = ({ reviewerWithLog }) => {
+const ReviewLog = ({ reviewerWithLog = [], isAddedToQuestionBank }) => {
   const [activeStep, setActiveStep] = useState(-1);
   return (
     <Stepper nonLinear orientation="vertical" activeStep={activeStep}>
-      {reviewerWithLog.map((reviewer, index) => (
+      {_.concat(reviewerWithLog, [
+        {
+          id: 0,
+          log:
+            isAddedToQuestionBank == null
+              ? null
+              : {
+                  isApproved: isAddedToQuestionBank,
+                  comment: isAddedToQuestionBank ? "Accepted" : "Rejected",
+                },
+          fullName: "Question Bank",
+        },
+      ]).map((reviewer, index) => (
         <Step key={reviewer.id}>
           <StepLabel
             onClick={() => setActiveStep(index)}
@@ -37,9 +49,11 @@ const ReviewLog = ({ reviewerWithLog }) => {
             }}
             optional={
               <Typography variant="caption">
-                {reviewer.log === null
-                  ? "time will be shown"
-                  : formatDate(reviewer.log.createdAt)}
+                {reviewer.id === 0
+                  ? ""
+                  : reviewer.log === null
+                    ? "time will be shown"
+                    : formatDate(reviewer.log.createdAt)}
               </Typography>
             }
           >
