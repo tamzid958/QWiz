@@ -14,6 +14,7 @@ Welcome to the Question Bank Management System! This system helps manage the cre
   - [User Management](#user-management)
 - [Installation](#installation)
 - [Running the Project](#running-the-project)
+- [Accessing Qwiz Website](#accessing-qwiz-website)
 - [Future Goals](#future-goals)
 - [Contributing](#contributing)
 - [License](#license)
@@ -65,9 +66,15 @@ To run the project, make sure ports 3000 and 65415 are free and docker must be i
 ```bash
 docker-compose up -d
 ```
-Once all services are up and running smoothly in Docker, you can easily access the Qwiz Website by navigating to: <br>
-[http://127.0.0.1:3000](http://127.0.0.1:3000)
 
+## Accessing Qwiz Website
+
+Once all services are up and running smoothly in Docker, you can easily access the Qwiz Website by navigating to [http://127.0.0.1:3000](http://127.0.0.1:3000)
+
+### Default Admin Credentials:
+
+- **Username:** tamzid
+- **Password:** tamzid
 
 ## Future Goals
 
