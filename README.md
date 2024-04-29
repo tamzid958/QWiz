@@ -13,7 +13,7 @@ Welcome to the Question Bank Management System! This system helps manage the cre
   - [Managing Categories](#managing-categories)
   - [User Management](#user-management)
 - [Installation](#installation)
-- [Running the Project](#running-the-project)
+- [Running the Project Locally](#running-the-project-locally)
 - [Accessing Qwiz Website](#accessing-qwiz-website)
 - [Future Goals](#future-goals)
 - [Contributing](#contributing)
@@ -53,19 +53,13 @@ Create categories from the category tab. Deleting a category automatically creat
 
 Admins can create users with specified roles and edit user details at any time. Block users to revoke their access.
 
-## Installation
-
-To use the Question Bank Management System locally, follow these steps:
-
-1. Clone this repository.
-2. Set up the necessary dependencies.
-3. Configure the system according to your requirements.
-
-## Running the Project
+## Running the Project Locally
 
 To run the project, make sure ports 3000 and 54321 are free and docker must be installed, then execute the following command:
 
 ```bash
+git clone https://github.com/tamzid958/QWiz.git &&
+cd Qwiz &&
 docker-compose up -d
 ```
 
