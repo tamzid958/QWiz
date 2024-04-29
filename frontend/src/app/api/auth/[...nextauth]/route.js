@@ -3,6 +3,7 @@ import CredentialsProvider from "next-auth/providers/credentials";
 import { requestApi } from "@/utils/axios.settings";
 import _ from "lodash";
 import { isJwtExpired } from "jwt-check-expiration";
+import { redis, redLock } from "@/utils/redis";
 
 const refreshAccessToken = async ({ accessToken, refreshToken }) => {
   try {
@@ -16,7 +17,7 @@ const refreshAccessToken = async ({ accessToken, refreshToken }) => {
       },
     });
     const data = response?.data;
-    console.log(data);
+
     if (!response?.error) {
       return {
         accessToken: data.token,
@@ -80,6 +81,8 @@ const handler = NextAuth({
             roles: user?.roles,
           },
         };
+
+        await redis.set(`token:${token.user.id}`, JSON.stringify(token));
         return token;
       }
 
@@ -87,10 +90,26 @@ const handler = NextAuth({
         return token;
       }
 
-      return refreshAccessToken({
-        accessToken: token?.accessToken,
-        refreshToken: token?.refreshToken,
-      });
+      return await redLock.using(
+        [token?.user.id, "jwt-refresh"],
+        5000,
+        async () => {
+          const redisToken = await redis.get(`token:${token?.user.id}`);
+          const currentToken = JSON.parse(redisToken);
+
+          if (!isJwtExpired(currentToken.accessToken)) {
+            return currentToken;
+          }
+
+          const newToken = await refreshAccessToken({
+            accessToken: currentToken?.accessToken,
+            refreshToken: currentToken?.refreshToken,
+          });
+
+          await redis.set(`token:${token?.user.id}`, JSON.stringify(newToken));
+          return newToken;
+        },
+      );
     },
     async session({ session, token }) {
       if (typeof token !== typeof undefined) {

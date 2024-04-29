@@ -99,7 +99,7 @@ public class AuthenticationService(
         return new AuthClaim
         {
             Token = tokenString,
-            RefreshToken = refreshToken,
+            RefreshToken = newRefreshToken,
             AppUser = user,
             Roles = user.UserRoles.Select(o => o.Role.Name).ToList()!
         };

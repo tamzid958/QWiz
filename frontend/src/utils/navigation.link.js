@@ -21,10 +21,10 @@ const navigationLinks = [
     url: "/question-bank",
     access: ["Admin"],
     hidden: false,
-    description: `Once a question has been reviewed by all reviewers, 
+    description: `Once a question has been reviewed by all reviewers and admin, 
     it will appear in the question bank section. To view which questions 
-    are already in the question bank, activate "Bank Mode". To see 
-    reviewed questions, switch back to "Review Mode".`,
+    are already in the question bank, activate "Added". To see 
+    rejected questions, switch back to "Rejected".`,
   },
   {
     title: "Question",

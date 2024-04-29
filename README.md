@@ -25,7 +25,7 @@ This system provides a comprehensive platform for managing questions, categories
 
 ## Features
 
-- **Question Bank**: Access a centralized repository of approved questions.
+- **Question Bank**: Access a centralized repository of approved and rejected questions.
 - **Category Management**: Organize questions into categories for easy navigation.
 - **User Management**: Admins can create, edit, and block users with specified roles.
 - **Review System**: Efficiently review and approve questions submitted by setters.
@@ -35,7 +35,7 @@ This system provides a comprehensive platform for managing questions, categories
 
 ### Question Bank
 
-Activate "Bank Mode" to view approved questions in the question bank. Easily switch between "Bank Mode" and "Review Mode" to see reviewed or under review questions respectively.
+Once a question has been reviewed by all reviewers and admin, it will appear in the question bank section. To view which questions are already in the question bank, activate "Added". To see rejected questions, switch back to "Rejected".
 
 ### Adding Questions
 
@@ -56,13 +56,15 @@ Admins can create users with specified roles and edit user details at any time. 
 ## Installation
 
 To use the Question Bank Management System locally, follow these steps:
+
 1. Clone this repository.
 2. Set up the necessary dependencies.
 3. Configure the system according to your requirements.
 
 ## Running the Project
 
-To run the project, make sure ports 3000 and 65415 are free and docker must be installed, then execute the following command:
+To run the project, make sure ports 3000 and 54321 are free and docker must be installed, then execute the following command:
+
 ```bash
 docker-compose up -d
 ```
@@ -99,7 +101,6 @@ Once all services are up and running smoothly in Docker, you can easily access t
 - **Machine Learning for Content Recommendations**: Personalize the learning journey with machine learning algorithms analyzing user behavior and preferences. Receive tailored content recommendations for questions, categories, and learning resources.
 
 These future goals are designed to elevate the functionality, usability, and effectiveness of the Question Bank Management System, empowering educators, content creators, and learners alike. Let's build a brighter future together! 🚀
-
 
 ## Contributing
 
