@@ -2,7 +2,7 @@ import NextAuth from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
 import { requestApi } from "@/utils/axios.settings";
 import _ from "lodash";
-import { parseJwt } from "@/utils/common";
+import { isJwtExpired } from "jwt-check-expiration";
 
 const refreshAccessToken = async ({ accessToken, refreshToken }) => {
   try {
@@ -16,11 +16,11 @@ const refreshAccessToken = async ({ accessToken, refreshToken }) => {
       },
     });
     const data = response?.data;
+    console.log(data);
     if (!response?.error) {
       return {
         accessToken: data.token,
         refreshToken: data.refreshToken ?? refreshToken,
-        accessTokenExpires: new Date() + parseJwt(data?.token).exp * 1000,
         user: {
           ..._.pick(data["appUser"], ["fullName", "id", "userName"]),
           roles: data.roles,
@@ -75,7 +75,6 @@ const handler = NextAuth({
         token = {
           accessToken: user?.token,
           refreshToken: user?.refreshToken,
-          accessTokenExpires: Date.now() + parseJwt(user?.token).exp * 1000,
           user: {
             ..._.pick(user["appUser"], ["fullName", "id", "userName"]),
             roles: user?.roles,
@@ -84,7 +83,7 @@ const handler = NextAuth({
         return token;
       }
 
-      if (Date.now() < token?.accessTokenExpires) {
+      if (!isJwtExpired(token?.accessToken)) {
         return token;
       }
 

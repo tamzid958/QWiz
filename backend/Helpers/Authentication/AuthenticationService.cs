@@ -70,7 +70,7 @@ public class AuthenticationService(
         }
     }
 
-    public Task<AuthClaim> RefreshToken(TokenModel tokenModel)
+    public AuthClaim RefreshToken(TokenModel tokenModel)
     {
         var accessToken = tokenModel.AccessToken;
         var refreshToken = tokenModel.RefreshToken;
@@ -96,13 +96,13 @@ public class AuthenticationService(
         updateUser.RefreshToken = newRefreshToken;
         repositoryWrapper.AppUser.Update(updateUser);
 
-        return Task.FromResult(new AuthClaim
+        return new AuthClaim
         {
             Token = tokenString,
             RefreshToken = refreshToken,
             AppUser = user,
             Roles = user.UserRoles.Select(o => o.Role.Name).ToList()!
-        });
+        };
     }
 
 

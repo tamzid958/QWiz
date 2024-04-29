@@ -21,5 +21,5 @@ FROM base AS final
 WORKDIR /app
 COPY --from=publish /app/publish .
 
-EXPOSE 65415
+EXPOSE 54321
 ENTRYPOINT ["dotnet", "QWiz.dll"]

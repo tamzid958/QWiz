@@ -29,9 +29,9 @@ public class AuthenticationController(AuthenticationService authenticationServic
     [HttpPost("RefreshToken")]
     [ProducesResponseType(typeof(AuthClaim), StatusCodes.Status201Created)]
     [ProducesResponseType(typeof(ExceptionMessage), StatusCodes.Status401Unauthorized)]
-    public async Task<IActionResult> RefreshToken([FromBody] TokenModel tokenModel)
+    public IActionResult RefreshToken([FromBody] TokenModel tokenModel)
     {
-        return Created(Request.Path.Value!, await authenticationService.RefreshToken(tokenModel));
+        return Created(Request.Path.Value!, authenticationService.RefreshToken(tokenModel));
     }
 
     [HttpPost("Register")]

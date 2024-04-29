@@ -12,6 +12,8 @@ services:
       - MSSQL_SA_PASSWORD=yourStrong(!)Password
       - ACCEPT_EULA=1
     restart: on-failure
+    ports:
+      - "1433:1433"
     volumes:
       - ./sqlserver/data:/var/opt/mssql/data
       - ./sqlserver/log:/var/opt/mssql/log
@@ -23,7 +25,7 @@ services:
     container_name: backend
     depends_on: [sql_server]
     ports:
-      - "65415:65415"
+      - "54321:54321"
     links:
       - sql_server
     restart: on-failure
