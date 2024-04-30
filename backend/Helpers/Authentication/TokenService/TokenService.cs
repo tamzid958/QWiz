@@ -12,7 +12,7 @@ public class TokenService(IConfiguration configuration) : ITokenService
     {
         var authSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(configuration["JWT:Secret"]!));
         var signinCredentials = new SigningCredentials(authSigningKey, SecurityAlgorithms.HmacSha256);
-        var accessTokenExpires = DateTime.Now.AddMinutes(5);
+        var accessTokenExpires = DateTimeOffset.Now.AddMinutes(5).DateTime;
         var tokenOptions = new JwtSecurityToken(
             configuration["JWT:ValidIssuer"],
             configuration["JWT:ValidAudience"],

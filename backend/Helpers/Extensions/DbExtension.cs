@@ -9,7 +9,7 @@ public static class DbExtension
     public static void ConfigureDbConnection(this IServiceCollection services, IConfiguration config)
     {
         services.AddDbContext<AppDbContext>(o =>
-            o.UseSqlServer(config.GetConnectionString("AppDbContextConnection")));
+            o.UseNpgsql(config.GetConnectionString("AppDbContextConnection")));
 
         services.AddScoped<IRepositoryWrapper, RepositoryWrapper>();
     }

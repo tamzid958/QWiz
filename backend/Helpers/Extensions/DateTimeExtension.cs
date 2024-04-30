@@ -7,14 +7,11 @@ public static class DateTimeExtension
         string timeZoneId = "Bangladesh Standard Time"
     )
     {
-        // Get the current UTC time
-        var utcTime = DateTime.Now;
-
         // Get the Dhaka time zone
         var dhakaTimeZone = TimeZoneInfo.FindSystemTimeZoneById(timeZoneId);
 
         // Convert UTC time to Dhaka time
-        var dhakaTime = TimeZoneInfo.ConvertTimeFromUtc(utcTime, dhakaTimeZone);
+        var dhakaTime = TimeZoneInfo.ConvertTimeFromUtc(dateTime, dhakaTimeZone);
 
         return dhakaTime;
     }

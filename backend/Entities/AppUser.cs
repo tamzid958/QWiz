@@ -24,7 +24,7 @@ public class AppUser : IdentityUser
 
     [JsonIgnore] [MaxLength(400)] public string? RefreshToken { get; set; }
 
-    [JsonIgnore] public DateTime RefreshTokenExpiryTime { get; set; } = DateTime.Now;
+    [JsonIgnore] public DateTimeOffset RefreshTokenExpiryTime { get; set; } = DateTimeOffset.Now;
 
     public virtual ICollection<ApplicationUserRole> UserRoles { get; } = new List<ApplicationUserRole>();
 }

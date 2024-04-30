@@ -11,6 +11,6 @@ public class AbstractAuditable<TKey, TUser, TUserKey> : IAbstractAuditable<TKey,
 
     public TUserKey? CreatedById { get; set; }
     [ForeignKey("CreatedById")] public TUser? CreatedBy { get; set; }
-    [Required] public DateTime CreatedAt { get; set; }
-    [Required] public DateTime UpdatedAt { get; set; }
+    [Required] public DateTimeOffset CreatedAt { get; set; }
+    [Required] public DateTimeOffset UpdatedAt { get; set; }
 }

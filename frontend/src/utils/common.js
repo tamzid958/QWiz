@@ -103,15 +103,7 @@ function getNextObject(objects, currentObject) {
 }
 
 const formatDate = (date) => {
-  const utcDate = new Date(date);
-
-  // Define the timezone offset for "GMT+6" in minutes
-  const timezoneOffsetHours = 6; // +6 hours
-  const userTimezoneOffset = timezoneOffsetHours * 60; // Convert hours to minutes
-
-  utcDate.setMinutes(utcDate.getMinutes() + userTimezoneOffset);
-
-  return dateFormat(new Date(utcDate), "mmmm dS, yyyy, h:MM TT");
+  return dateFormat(new Date(date), "mmmm dS, yyyy, h:MM TT");
 };
 
 function sortByBooleanProperty(objects, propertyName) {

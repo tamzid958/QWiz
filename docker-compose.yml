@@ -8,28 +8,37 @@ services:
   redis:
     image: redis:latest
     container_name: redis
-    command: redis-server --appendonly yes  --requirepass 'yourStrong(!)Password'
+    env_file:
+      - ./configuration/redis.env
+    command: /bin/sh -c "redis-server --appendonly yes --requirepass $$REDIS_HOST_PASSWORD"
     volumes:
-      - ./redis_data:/data
+      - ./volumes/redis_data:/data
     restart: always
 
   sql_server:
-    image: mcr.microsoft.com/azure-sql-edge
+    image: postgres:latest
     container_name: sql_server
-    environment:
-      - MSSQL_SA_PASSWORD=yourStrong(!)Password
-      - ACCEPT_EULA=1
+    env_file:
+      - ./configuration/sql_server.env
     restart: always
     volumes:
-      - ./sqlserver/data:/var/opt/mssql/data
-      - ./sqlserver/log:/var/opt/mssql/log
+      - ./volumes/sql_server:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U sa"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
 
   backend:
     build:
       context: ./backend
       dockerfile: Dockerfile
     container_name: backend
-    depends_on: [sql_server]
+    env_file:
+      - ./configuration/backend.env
+    depends_on:
+      sql_server:
+        condition: service_healthy
     ports:
       - "54321:54321"
     links:

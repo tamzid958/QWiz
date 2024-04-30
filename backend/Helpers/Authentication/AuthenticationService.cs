@@ -51,7 +51,7 @@ public class AuthenticationService(
 
             var updateUser = repositoryWrapper.AppUser.GetById(user.Id);
             updateUser.RefreshToken = refreshToken;
-            updateUser.RefreshTokenExpiryTime = DateTime.Now.AddDays(7);
+            updateUser.RefreshTokenExpiryTime = DateTimeOffset.Now.AddDays(7);
             await userManager.UpdateAsync(updateUser);
 
             var tokenString = tokenService.GenerateAccessToken(authClaims);
@@ -86,7 +86,7 @@ public class AuthenticationService(
         );
         if (user == null) throw new AuthenticationFailureException("Invalid user");
 
-        if (user.RefreshToken != refreshToken || user.RefreshTokenExpiryTime <= DateTime.Now)
+        if (user.RefreshToken != refreshToken || user.RefreshTokenExpiryTime <= DateTimeOffset.Now)
             throw new InvalidCredentialException("Invalid client request");
 
         var tokenString = tokenService.GenerateAccessToken(principal.Claims);

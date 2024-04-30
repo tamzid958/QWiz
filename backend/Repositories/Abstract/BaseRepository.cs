@@ -38,9 +38,9 @@ public abstract class BaseRepository<T>(
                 typeof(T).GetProperty("CreatedById")?.SetValue(entity,
                     httpContextAccessor.HttpContext?.User.Claims.First(o => o.Type == "UserId").Value);
             if (typeof(T).GetProperty("CreatedAt") != null)
-                typeof(T).GetProperty("CreatedAt")?.SetValue(entity, DateTime.Now);
+                typeof(T).GetProperty("CreatedAt")?.SetValue(entity, DateTimeOffset.Now);
             if (typeof(T).GetProperty("UpdatedAt") != null)
-                typeof(T).GetProperty("UpdatedAt")?.SetValue(entity, DateTime.Now);
+                typeof(T).GetProperty("UpdatedAt")?.SetValue(entity, DateTimeOffset.Now);
 
 
             Context.Set<T>().Attach(entity);
@@ -66,9 +66,9 @@ public abstract class BaseRepository<T>(
                 if (typeof(T).GetProperty("CreatedById") != null)
                     typeof(T).GetProperty("CreatedById")?.SetValue(entity, user);
                 if (typeof(T).GetProperty("CreatedAt") != null)
-                    typeof(T).GetProperty("CreatedAt")?.SetValue(entity, DateTime.Now);
+                    typeof(T).GetProperty("CreatedAt")?.SetValue(entity, DateTimeOffset.Now);
                 if (typeof(T).GetProperty("UpdatedAt") != null)
-                    typeof(T).GetProperty("UpdatedAt")?.SetValue(entity, DateTime.Now);
+                    typeof(T).GetProperty("UpdatedAt")?.SetValue(entity, DateTimeOffset.Now);
             });
 
             Context.Set<T>().AddRange(entities);
@@ -86,7 +86,7 @@ public abstract class BaseRepository<T>(
         try
         {
             if (typeof(T).GetProperty("UpdatedAt") != null)
-                typeof(T).GetProperty("UpdatedAt")?.SetValue(entity, DateTime.Now);
+                typeof(T).GetProperty("UpdatedAt")?.SetValue(entity, DateTimeOffset.Now);
 
 
             Context.Set<T>().Attach(entity);
@@ -112,7 +112,7 @@ public abstract class BaseRepository<T>(
             entities.ForEach(entity =>
             {
                 if (typeof(T).GetProperty("UpdatedAt") != null)
-                    typeof(T).GetProperty("UpdatedAt")?.SetValue(entity, DateTime.Now);
+                    typeof(T).GetProperty("UpdatedAt")?.SetValue(entity, DateTimeOffset.Now);
                 if (typeof(T).GetProperty("CreatedById") != null)
                     Context.Entry(entity).Property("CreatedById").IsModified = false;
                 if (typeof(T).GetProperty("CreatedAt") != null)
